@@ -1,8 +1,9 @@
-import HelloWorld from './HelloWorld.js';
+import { GameLoop } from './GameLoop.js';
+import Cybertale from './Cybertale.js';
 
-const greeting = new HelloWorld();
-console.log(greeting.greet());
+const cybertale = new Cybertale(document.getElementById('game') as HTMLCanvasElement);
+
+const gameLoop = new GameLoop(cybertale);
 window.addEventListener('load', () => {
-  document.getElementById('content').innerText = greeting.greet();
-}
-);
+  gameLoop.start();
+});
