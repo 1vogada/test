@@ -1,8 +1,8 @@
 {
-  "name": "ts-skeleton-app",
-  "version": "1.6.0",
-  "repository": "git@github.com:HZ-HBO-ICT/ts-skeleton-app.git",
-  "author": "HZ University of Applied Sciences",
+  "name": "ts-skeleton-game",
+  "version": "1.0.0",
+  "repository": "git@github.com:TonevS/pabo-game.github.io",
+  "author": "TonevS, 1vogada",
   "license": "MIT",
   "private": true,
   "type": "module",
