@@ -27,15 +27,27 @@ export default class LevelOne extends Scene {
     }
     if (keyListener.isKeyDown(KeyListener.KEY_W)) {
       this.player.moveUp();
+      this.gameObject.forEach((rock: Rock) => {
+        rock.moveUp();
+      });
     }
     if (keyListener.isKeyDown(KeyListener.KEY_A)) {
       this.player.moveLeft();
+      this.gameObject.forEach((rock: Rock) => {
+        rock.moveLeft();
+      });
     }
     if (keyListener.isKeyDown(KeyListener.KEY_S)) {
       this.player.moveDown();
+      this.gameObject.forEach((rock: Rock) => {
+        rock.moveDown();
+      });
     }
     if (keyListener.isKeyDown(KeyListener.KEY_D)) {
       this.player.moveRight();
+      this.gameObject.forEach((rock: Rock) => {
+        rock.moveRight();
+      });
     }
     if (keyListener.keyPressed(KeyListener.KEY_E)) {
       this.gameObject.forEach((object: GameObject) => {
@@ -49,11 +61,8 @@ export default class LevelOne extends Scene {
   }
 
   public update(elapsed: number): Scene {
-    this.gameObject.forEach((object: GameObject) => {
-      object.setPosX(this.player.getPosX());
-      object.setPosY(this.player.getPosY());
-      object.update(elapsed);
-    });
+    console.log(elapsed);
+    console.log(this.maxX);
     return null;
   }
 
