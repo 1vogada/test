@@ -5,6 +5,7 @@ import Scene from './Scene.js';
 import Player from '../Player.js';
 import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
+import Rock from '../GameObjects/Rock.js';
 
 export default class LevelOne extends Scene {
   private player: Player;
@@ -15,22 +16,44 @@ export default class LevelOne extends Scene {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
     this.player = new Player(maxX, maxY);
+    this.gameObject.push(new Rock(this.maxX, this.maxY));
+    this.gameObject.push(new Rock(this.maxX, this.maxY));
+    this.gameObject.push(new Rock(this.maxX, this.maxY));
   }
 
   public processInput(keyListener: KeyListener): void {
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) {
-      this.player.getPosX();
       window.location.reload();
+    }
+    if (keyListener.isKeyDown(KeyListener.KEY_W)) {
+      this.player.moveUp();
+    }
+    if (keyListener.isKeyDown(KeyListener.KEY_A)) {
+      this.player.moveLeft();
+    }
+    if (keyListener.isKeyDown(KeyListener.KEY_S)) {
+      this.player.moveDown();
+    }
+    if (keyListener.isKeyDown(KeyListener.KEY_D)) {
+      this.player.moveRight();
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_E)) {
+      this.gameObject.forEach((object: GameObject) => {
+        if (this.player.collideWithObject(object)) {
+          if (object instanceof Rock) {
+            object.interacted();
+          }
+        }
+      });
     }
   }
 
   public update(elapsed: number): Scene {
-    this.gameObject.forEach((object: GameObject) => object.update(elapsed));
-
-    this.gameObject = this.gameObject.filter((object: GameObject) => object.getPosX() < this.maxX
-    && object.getPosX() > 0 - object.getWidth()
-    && object.getPosY() < this.maxY
-    && object.getPosY() > 0 - object.getHeight());
+    this.gameObject.forEach((object: GameObject) => {
+      object.setPosX(this.player.getPosX());
+      object.setPosY(this.player.getPosY());
+      object.update(elapsed);
+    });
     return null;
   }
 
