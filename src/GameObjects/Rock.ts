@@ -34,7 +34,11 @@ export default class Rock extends GameObject {
    *  used when player clicks E when over rock
    */
   public interacted(): void {
-    this.isInUse = true;
+    if (this.isInUse) {
+      this.isInUse = false;
+    } else {
+      this.isInUse = true;
+    }
   }
 
   public override setPosX(posX: number): void {
