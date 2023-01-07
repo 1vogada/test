@@ -1,7 +1,6 @@
 import { Game } from './GameLoop.js';
 import CanvasUtil from './CanvasUtil.js';
 import KeyListener from './KeyListener.js';
-import Player from './Player.js';
 import Scene from './Scenes/Scene.js';
 import SceneStart from './Scenes/SceneStart.js';
 
@@ -9,8 +8,6 @@ export default class Cybertale extends Game {
   private canvas: HTMLCanvasElement;
 
   private keyListener: KeyListener;
-
-  private player: Player;
 
   private currentScene: Scene;
 
@@ -21,7 +18,6 @@ export default class Cybertale extends Game {
     this.canvas.width = window.innerWidth;
     this.keyListener = new KeyListener();
 
-    this.player = new Player(this.canvas.width, this.canvas.height);
     this.currentScene = new SceneStart(this.canvas.width, this.canvas.height);
   }
 

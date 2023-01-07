@@ -4,14 +4,12 @@ import GameObject from './GameObject.js';
 export default class Rock extends GameObject {
   private isInUse: boolean;
 
-  public constructor(maxX: number, maxY: number) {
+  public constructor(posX: number, posY: number) {
     super();
-    this.posX = Math.floor(Math.random() * 850) - 80;
-    this.posY = Math.floor(Math.random() * 550) + 80;
-    this.image = CanvasUtil.loadNewImage('./assets/rock300.png');
+    this.image = CanvasUtil.loadNewImage('./assets/rock.png');
     this.isInUse = false;
-    console.log(maxX);
-    console.log(maxY);
+    this.posX = posX;
+    this.posY = posY;
   }
 
   /**
@@ -21,50 +19,19 @@ export default class Rock extends GameObject {
     console.log(this.isInUse);
   }
 
-  /**
-   *  used when player clicks E when over rock
-   */
-  public interacted(): void {
-    if (this.isInUse) {
-      this.isInUse = false;
-    } else {
-      this.isInUse = true;
-    }
+  public setPosX(posX: number): void {
+    this.posX = posX;
   }
 
-  /**
-   * moveUp
-   */
-  public moveUp(): void {
-    if (this.posY > 80 && this.isInUse) {
-      this.posY -= 6;
-    }
+  public setPosY(posY: number): void {
+    this.posY = posY;
   }
 
-  /**
-   * moveDown
-   */
-  public moveDown(): void {
-    if (this.posY < 620 && this.isInUse) {
-      this.posY += 6;
-    }
+  public getStatusCarried():boolean {
+    return this.isInUse;
   }
 
-  /**
-   * moveLeft
-   */
-  public moveLeft(): void {
-    if (this.posX > -80 && this.isInUse) {
-      this.posX -= 6;
-    }
-  }
-
-  /**
-   * moveRight
-   */
-  public moveRight(): void {
-    if (this.posX < 850 && this.isInUse) {
-      this.posX += 6;
-    }
+  public setStatusCarried(status: boolean): void {
+    this.isInUse = status;
   }
 }
