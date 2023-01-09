@@ -32,6 +32,22 @@ export default class LevelOne extends Scene {
 
   private playableAreaBridgeMaxY: number;
 
+  private playableAreaRightX: number;
+
+  private playableAreaRightY: number;
+
+  private playableAreaRightMaxX: number;
+
+  private playableAreaRightMaxY: number;
+
+  private playableAreaEndX: number;
+
+  private playableAreaEndY: number;
+
+  private playableAreaEndMaxX: number;
+
+  private playableAreaEndMaxY: number;
+
   private isUsing: boolean;
 
   private hasRock: boolean;
@@ -56,6 +72,16 @@ export default class LevelOne extends Scene {
     this.playableAreaBridgeX = maxX / 2;
     this.playableAreaBridgeY = 750;
 
+    this.playableAreaRightMaxX = 1550;
+    this.playableAreaRightMaxY = 865;
+    this.playableAreaRightX = 1350;
+    this.playableAreaRightY = 290;
+
+    this.playableAreaEndMaxX = maxX;
+    this.playableAreaEndMaxY = 675;
+    this.playableAreaEndX = 1550;
+    this.playableAreaEndY = 510;
+
     this.gameObjects.push(new Rock(600, 300));
     this.gameObjects.push(new Rock(300, 550));
     this.gameObjects.push(new Rock(550, 750));
@@ -77,27 +103,34 @@ export default class LevelOne extends Scene {
     if (keyListener.isKeyDown(KeyListener.KEY_W)) {
       if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
       if (this.isCorrect) {
-        if (playerPosX > this.playableAreaBridgeX && playerPosY > this.playableAreaBridgeY) this.player.moveUp();
+        if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
         else if (playerPosX < this.playableAreaBridgeX && playerPosY > this.playableAreaLeftY) this.player.moveUp();
+        else if (playerPosX > this.playableAreaRightX && playerPosX - 10 < this.playableAreaRightMaxX && playerPosY > this.playableAreaRightY) this.player.moveUp();
+        else if (playerPosX > this.playableAreaEndX && playerPosY > this.playableAreaEndY) this.player.moveUp();
       }
     }
     if (keyListener.isKeyDown(KeyListener.KEY_S)) {
       if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
       if (this.isCorrect) {
-        if (playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
+        if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
+        else if (playerPosX > this.playableAreaEndX && playerPosY < this.playableAreaEndMaxY) this.player.moveDown();
       }
     }
     if (keyListener.isKeyDown(KeyListener.KEY_A)) {
       if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
       if (this.isCorrect) {
-        if (playerPosX > this.playableAreaLeftX) this.player.moveLeft();
+        if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
+        else if (playerPosX - 10 > this.playableAreaRightX && playerPosY < this.playableAreaBridgeY) this.player.moveLeft();
+        else if (playerPosY > this.playableAreaBridgeY && (playerPosX > this.playableAreaRightX || playerPosX > this.playableAreaBridgeX)) this.player.moveLeft();
       }
     }
     if (keyListener.isKeyDown(KeyListener.KEY_D)) {
       if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
       if (this.isCorrect) {
         if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();
-        if (playerPosY < this.playableAreaBridgeY && playerPosX + 10 < this.playableAreaLeftMaxX) this.player.moveRight();
+        else if (playerPosY < this.playableAreaBridgeY && playerPosX + 10 < this.playableAreaLeftMaxX) this.player.moveRight();
+        else if (playerPosX > this.playableAreaRightX && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
+        else if (playerPosX > this.playableAreaEndX && playerPosY + 10 > this.playableAreaEndY && playerPosY - 10 < this.playableAreaEndMaxY) this.player.moveRight();
       }
     }
     if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
@@ -146,7 +179,7 @@ export default class LevelOne extends Scene {
     this.player.render(canvas);
     // Render forward things closer and further things behind
     this.gameObjects.forEach((object: GameObject) => {
-      if (object instanceof Rock && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
+      if ((object instanceof Rock || object instanceof Helper) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
         object.render(canvas);
       }
     });
@@ -164,5 +197,10 @@ export default class LevelOne extends Scene {
         }
       }
     });
+
+    if (this.player.getPosX() > this.playableAreaEndMaxX) {
+      CanvasUtil.fillCanvas(canvas, 'white');
+      CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
+    }
   }
 }
