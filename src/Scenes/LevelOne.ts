@@ -8,14 +8,14 @@ import GameObject from '../GameObjects/GameObject.js';
 import Rock from '../GameObjects/Rock.js';
 import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/Bridge.js';
+import Plate from '../GameObjects/Plate.js';
 
 export default class LevelOne extends Scene {
   private player: Player;
 
-  private helper: Helper;
-
   private gameObjects: GameObject[] = [];
 
+  // Playable area: LEFT
   private playableAreaLeftX:number;
 
   private playableAreaLeftY:number;
@@ -24,6 +24,7 @@ export default class LevelOne extends Scene {
 
   private playableAreaLeftMaxY: number;
 
+  // Playable area: BRIDGE
   private playableAreaBridgeX:number;
 
   private playableAreaBridgeY:number;
@@ -32,6 +33,7 @@ export default class LevelOne extends Scene {
 
   private playableAreaBridgeMaxY: number;
 
+  // Playable area: RIGHT
   private playableAreaRightX: number;
 
   private playableAreaRightY: number;
@@ -40,6 +42,7 @@ export default class LevelOne extends Scene {
 
   private playableAreaRightMaxY: number;
 
+  // Playable area: END
   private playableAreaEndX: number;
 
   private playableAreaEndY: number;
@@ -55,6 +58,8 @@ export default class LevelOne extends Scene {
   private isTalking: boolean;
 
   private isCorrect: boolean;
+
+  private numOfSetPlates: number;
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
@@ -82,17 +87,21 @@ export default class LevelOne extends Scene {
     this.playableAreaEndX = 1550;
     this.playableAreaEndY = 510;
 
-    this.gameObjects.push(new Rock(600, 300));
-    this.gameObjects.push(new Rock(300, 550));
-    this.gameObjects.push(new Rock(550, 750));
+    this.gameObjects.push(new Rock(600, 300, false));
+    this.gameObjects.push(new Rock(300, 550, false));
+    this.gameObjects.push(new Rock(550, 750, true));
     this.gameObjects.push(new Bridge(1050, 300));
     this.gameObjects.push(new Bridge(1150, 550));
     this.gameObjects.push(new Bridge(1250, 750));
+    this.gameObjects.push(new Plate(900, 300));
+    this.gameObjects.push(new Plate(900, 500));
+    this.gameObjects.push(new Plate(900, 700));
 
     this.isUsing = false;
     this.hasRock = false;
     this.isTalking = false;
     this.isCorrect = false;
+    this.numOfSetPlates = 0;
   }
 
   public processInput(keyListener: KeyListener): void {
@@ -134,13 +143,17 @@ export default class LevelOne extends Scene {
       }
     }
     if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
-    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) this.isCorrect = true;
+    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+      this.gameObjects.forEach((object: GameObject) => {
+        if (object instanceof Rock && object.getIsSpecial()) object.setIsSpecial(false);
+      });
+    }
   }
 
   public update(elapsed: number): Scene {
     // Rock pickup and drop
     this.gameObjects.forEach((rock: Rock) => {
-      if (this.isUsing && this.player.collideWithObject(rock) && rock instanceof Rock) {
+      if (this.isUsing && this.player.collideWithObject(rock) && rock instanceof Rock && !rock.getIsSpecial()) {
         if (!this.hasRock) {
           this.hasRock = true;
           rock.setStatusCarried(true);
@@ -160,6 +173,21 @@ export default class LevelOne extends Scene {
         this.isTalking = true;
       }
     });
+
+    this.gameObjects.forEach((rock: GameObject) => {
+      this.gameObjects.forEach((plate: GameObject) => {
+        if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate) && !rock.getStatusCarried()) {
+          plate.setIsSet(true);
+        }
+      });
+    });
+
+    this.gameObjects.forEach((plate: GameObject) => {
+      if (plate instanceof Plate && plate.getIsSet()) this.numOfSetPlates += 1;
+      if (this.numOfSetPlates === 3) this.isCorrect = true;
+    });
+    this.numOfSetPlates = 0;
+
     if (this.isCorrect) {
       this.gameObjects.forEach((object: GameObject) => {
         if (object instanceof Bridge && object.getPosY() < 750) {
@@ -177,6 +205,18 @@ export default class LevelOne extends Scene {
     CanvasUtil.drawImage(canvas, this.background, 0, 0);
     this.gameObjects.forEach((object: GameObject) => object.render(canvas));
     this.player.render(canvas);
+
+    // renders rocks infront of plates
+    this.gameObjects.forEach((rock: GameObject) => {
+      this.gameObjects.forEach((plate: GameObject) => {
+        if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate)) {
+          plate.render(canvas);
+          rock.render(canvas);
+          if (plate.getIsSet()) this.player.render(canvas);
+        }
+      });
+    });
+
     // Render forward things closer and further things behind
     this.gameObjects.forEach((object: GameObject) => {
       if ((object instanceof Rock || object instanceof Helper) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
