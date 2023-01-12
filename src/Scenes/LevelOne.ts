@@ -8,12 +8,11 @@ import GameObject from '../GameObjects/GameObject.js';
 import Rock from '../GameObjects/Rock.js';
 import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/Bridge.js';
+import Plate from '../GameObjects/Plate.js';
 import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
 
 export default class LevelOne extends Scene {
   private player: Player;
-
-  private helper: Helper;
 
   private dialogue: DialogueLevelOne;
 
@@ -21,6 +20,7 @@ export default class LevelOne extends Scene {
 
   private gameObjects: GameObject[] = [];
 
+  // Playable area: LEFT
   private playableAreaLeftX:number;
 
   private playableAreaLeftY:number;
@@ -29,6 +29,7 @@ export default class LevelOne extends Scene {
 
   private playableAreaLeftMaxY: number;
 
+  // Playable area: BRIDGE
   private playableAreaBridgeX:number;
 
   private playableAreaBridgeY:number;
@@ -37,6 +38,7 @@ export default class LevelOne extends Scene {
 
   private playableAreaBridgeMaxY: number;
 
+  // Playable area: RIGHT
   private playableAreaRightX: number;
 
   private playableAreaRightY: number;
@@ -45,6 +47,7 @@ export default class LevelOne extends Scene {
 
   private playableAreaRightMaxY: number;
 
+  // Playable area: END
   private playableAreaEndX: number;
 
   private playableAreaEndY: number;
@@ -60,6 +63,14 @@ export default class LevelOne extends Scene {
   private isTalking: boolean;
 
   private isCorrect: boolean;
+
+  private numOfSetPlates: number;
+
+  private isInCutscene: boolean;
+
+  private cutsceneTimeLeft: number;
+
+  private blackBarLength: number;
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
@@ -86,17 +97,24 @@ export default class LevelOne extends Scene {
     this.playableAreaEndX = 1550;
     this.playableAreaEndY = 510;
 
-    this.gameObjects.push(new Rock(600, 300));
-    this.gameObjects.push(new Rock(300, 550));
-    this.gameObjects.push(new Rock(550, 750));
+    this.gameObjects.push(new Rock(600, 300, false));
+    this.gameObjects.push(new Rock(300, 550, false));
+    this.gameObjects.push(new Rock(550, 750, true));
     this.gameObjects.push(new Bridge(1050, 300));
     this.gameObjects.push(new Bridge(1150, 550));
     this.gameObjects.push(new Bridge(1250, 750));
+    this.gameObjects.push(new Plate(900, 300));
+    this.gameObjects.push(new Plate(900, 500));
+    this.gameObjects.push(new Plate(900, 700));
 
     this.isUsing = false;
     this.hasRock = false;
     this.isTalking = false;
     this.isCorrect = false;
+    this.numOfSetPlates = 0;
+    this.cutsceneTimeLeft = 2700;
+    this.blackBarLength = 0;
+    this.isInCutscene = false;
     this.dialogueStarted = false;
   }
 
@@ -104,64 +122,70 @@ export default class LevelOne extends Scene {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
     const playerPosX: number = this.player.getPosX();
 
+    if (keyListener.keyPressed(KeyListener.KEY_O)) this.numOfSetPlates = 0;
+    if (keyListener.keyPressed(KeyListener.KEY_P)) this.numOfSetPlates = 3;
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) window.location.reload();
-    if (keyListener.isKeyDown(KeyListener.KEY_W)) {
-      if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
-      if (this.isCorrect) {
-        if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
-        else if (playerPosX < this.playableAreaBridgeX && playerPosY > this.playableAreaLeftY) this.player.moveUp();
-        else if (playerPosX > this.playableAreaRightX && playerPosX - 10 < this.playableAreaRightMaxX && playerPosY > this.playableAreaRightY) this.player.moveUp();
-        else if (playerPosX > this.playableAreaEndX && playerPosY > this.playableAreaEndY) this.player.moveUp();
+    if (!this.isInCutscene) {
+      if (keyListener.isKeyDown(KeyListener.KEY_W)) {
+        if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
+        if (this.isCorrect) {
+          if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
+          else if (playerPosX < this.playableAreaBridgeX && playerPosY > this.playableAreaLeftY) this.player.moveUp();
+          else if (playerPosX > this.playableAreaRightX && playerPosX - 10 < this.playableAreaRightMaxX && playerPosY > this.playableAreaRightY) this.player.moveUp();
+          else if (playerPosX > this.playableAreaEndX && playerPosY > this.playableAreaEndY) this.player.moveUp();
+        }
       }
-    }
-    if (keyListener.isKeyDown(KeyListener.KEY_S)) {
-      if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
-      if (this.isCorrect) {
-        if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
-        else if (playerPosX > this.playableAreaEndX && playerPosY < this.playableAreaEndMaxY) this.player.moveDown();
+      if (keyListener.isKeyDown(KeyListener.KEY_S)) {
+        if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
+        if (this.isCorrect) {
+          if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
+          else if (playerPosX > this.playableAreaEndX && playerPosY < this.playableAreaEndMaxY) this.player.moveDown();
+        }
       }
-    }
-    if (keyListener.isKeyDown(KeyListener.KEY_A)) {
-      if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
-      if (this.isCorrect) {
-        if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
-        else if (playerPosX - 10 > this.playableAreaRightX && playerPosY < this.playableAreaBridgeY) this.player.moveLeft();
-        else if (playerPosY > this.playableAreaBridgeY && (playerPosX > this.playableAreaRightX || playerPosX > this.playableAreaBridgeX)) this.player.moveLeft();
+      if (keyListener.isKeyDown(KeyListener.KEY_A)) {
+        if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
+        if (this.isCorrect) {
+          if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
+          else if (playerPosX - 10 > this.playableAreaRightX && playerPosY < this.playableAreaBridgeY) this.player.moveLeft();
+          else if (playerPosY > this.playableAreaBridgeY && (playerPosX > this.playableAreaRightX || playerPosX > this.playableAreaBridgeX)) this.player.moveLeft();
+        }
       }
-    }
-    if (keyListener.isKeyDown(KeyListener.KEY_D)) {
-      if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
-      if (this.isCorrect) {
-        if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();
-        else if (playerPosY < this.playableAreaBridgeY && playerPosX + 10 < this.playableAreaLeftMaxX) this.player.moveRight();
-        else if (playerPosX > this.playableAreaRightX && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
-        else if (playerPosX > this.playableAreaEndX && playerPosY + 10 > this.playableAreaEndY && playerPosY - 10 < this.playableAreaEndMaxY) this.player.moveRight();
+      if (keyListener.isKeyDown(KeyListener.KEY_D)) {
+        if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
+        if (this.isCorrect) {
+          if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();
+          else if (playerPosY < this.playableAreaBridgeY && playerPosX + 10 < this.playableAreaLeftMaxX) this.player.moveRight();
+          else if (playerPosX > this.playableAreaRightX && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
+          else if (playerPosX > this.playableAreaEndX && playerPosY + 10 > this.playableAreaEndY && playerPosY - 10 < this.playableAreaEndMaxY) this.player.moveRight();
+        }
       }
-    }
-    if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
-    if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
-      this.isUsing = true;
-      this.dialogue.upCount('');
-    }
-    if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
-      this.isUsing = true;
-      this.dialogue.upCount('A');
-    }
-    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
-      this.isUsing = true;
-      this.dialogue.upCount('B');
-      this.isCorrect = true;
-    }
-    if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
-      this.isUsing = true;
-      this.dialogue.upCount('C');
+      if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
+      if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('');
+      }
+      if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('A');
+      }
+      if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('C');
+      }
+      if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('B');
+        this.gameObjects.forEach((object: GameObject) => {
+          if (object instanceof Rock && object.getIsSpecial()) object.setIsSpecial(false);
+        });
+      }
     }
   }
 
   public update(elapsed: number): Scene {
     // Rock pickup and drop
     this.gameObjects.forEach((rock: Rock) => {
-      if (this.isUsing && this.player.collideWithObject(rock) && rock instanceof Rock) {
+      if (this.isUsing && this.player.collideWithObject(rock) && rock instanceof Rock && !rock.getIsSpecial()) {
         if (!this.hasRock) {
           this.hasRock = true;
           rock.setStatusCarried(true);
@@ -181,6 +205,27 @@ export default class LevelOne extends Scene {
         this.isTalking = true;
       }
     });
+
+    this.gameObjects.forEach((rock: GameObject) => {
+      this.gameObjects.forEach((plate: GameObject) => {
+        if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate) && !rock.getStatusCarried()) {
+          plate.setIsSet(true);
+          rock.setIsSpecial(true);
+          rock.setPosX(plate.getPosX() - 5);
+          rock.setPosY(plate.getPosY() - rock.getHeight() * 0.3);
+        }
+      });
+    });
+
+    this.gameObjects.forEach((plate: GameObject) => {
+      if (plate instanceof Plate && plate.getIsSet()) this.numOfSetPlates += 1;
+      if (this.numOfSetPlates === 3) {
+        this.isInCutscene = true;
+        this.isCorrect = true;
+      }
+    });
+    this.numOfSetPlates = 0;
+
     if (this.isCorrect) {
       this.gameObjects.forEach((object: GameObject) => {
         if (object instanceof Bridge && object.getPosY() < 750) {
@@ -188,6 +233,17 @@ export default class LevelOne extends Scene {
         }
       });
     }
+
+    if (this.isInCutscene) this.cutsceneTimeLeft -= elapsed;
+    if (this.cutsceneTimeLeft < 0) this.isInCutscene = false;
+    if (this.isInCutscene && this.blackBarLength <= 50) {
+      this.blackBarLength += elapsed * 0.1;
+    }
+    if (!this.isInCutscene && this.blackBarLength >= 0) {
+      console.log('test');
+      this.blackBarLength -= elapsed * 0.1;
+    }
+    console.log(`Cutscene: ${this.isInCutscene}`);
 
     this.isUsing = false;
     return null;
@@ -198,6 +254,18 @@ export default class LevelOne extends Scene {
     CanvasUtil.drawImage(canvas, this.background, 0, 0);
     this.gameObjects.forEach((object: GameObject) => object.render(canvas));
     this.player.render(canvas);
+
+    // renders rocks infront of plates
+    this.gameObjects.forEach((rock: GameObject) => {
+      this.gameObjects.forEach((plate: GameObject) => {
+        if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate) && !rock.getStatusCarried()) {
+          plate.render(canvas);
+          rock.render(canvas);
+          if (plate.getIsSet()) this.player.render(canvas);
+        }
+      });
+    });
+
     // Render forward things closer and further things behind
     this.gameObjects.forEach((object: GameObject) => {
       if ((object instanceof Rock || object instanceof Helper) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
@@ -214,6 +282,9 @@ export default class LevelOne extends Scene {
         this.dialogue.render(canvas);
       }
     });
+
+    CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
+    CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');
 
     if (this.player.getPosX() > this.playableAreaEndMaxX) {
       CanvasUtil.fillCanvas(canvas, 'white');
