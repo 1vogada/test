@@ -23,6 +23,7 @@ export default class Plate extends GameObject {
   }
 
   public setIsSet(status: boolean): void {
+    this.image = CanvasUtil.loadNewImage('./assets/pressurePlatePressed.png');
     this.isSet = status;
   }
 }

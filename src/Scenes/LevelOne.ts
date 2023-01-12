@@ -61,6 +61,12 @@ export default class LevelOne extends Scene {
 
   private numOfSetPlates: number;
 
+  private isInCutscene: boolean;
+
+  private cutsceneTimeLeft: number;
+
+  private blackBarLength: number;
+
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
@@ -102,51 +108,58 @@ export default class LevelOne extends Scene {
     this.isTalking = false;
     this.isCorrect = false;
     this.numOfSetPlates = 0;
+    this.cutsceneTimeLeft = 2700;
+    this.blackBarLength = 0;
+    this.isInCutscene = false;
   }
 
   public processInput(keyListener: KeyListener): void {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
     const playerPosX: number = this.player.getPosX();
 
+    if (keyListener.keyPressed(KeyListener.KEY_O)) this.numOfSetPlates = 0;
+    if (keyListener.keyPressed(KeyListener.KEY_P)) this.numOfSetPlates = 3;
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) window.location.reload();
-    if (keyListener.isKeyDown(KeyListener.KEY_W)) {
-      if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
-      if (this.isCorrect) {
-        if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
-        else if (playerPosX < this.playableAreaBridgeX && playerPosY > this.playableAreaLeftY) this.player.moveUp();
-        else if (playerPosX > this.playableAreaRightX && playerPosX - 10 < this.playableAreaRightMaxX && playerPosY > this.playableAreaRightY) this.player.moveUp();
-        else if (playerPosX > this.playableAreaEndX && playerPosY > this.playableAreaEndY) this.player.moveUp();
+    if (!this.isInCutscene) {
+      if (keyListener.isKeyDown(KeyListener.KEY_W)) {
+        if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
+        if (this.isCorrect) {
+          if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
+          else if (playerPosX < this.playableAreaBridgeX && playerPosY > this.playableAreaLeftY) this.player.moveUp();
+          else if (playerPosX > this.playableAreaRightX && playerPosX - 10 < this.playableAreaRightMaxX && playerPosY > this.playableAreaRightY) this.player.moveUp();
+          else if (playerPosX > this.playableAreaEndX && playerPosY > this.playableAreaEndY) this.player.moveUp();
+        }
       }
-    }
-    if (keyListener.isKeyDown(KeyListener.KEY_S)) {
-      if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
-      if (this.isCorrect) {
-        if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
-        else if (playerPosX > this.playableAreaEndX && playerPosY < this.playableAreaEndMaxY) this.player.moveDown();
+      if (keyListener.isKeyDown(KeyListener.KEY_S)) {
+        if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
+        if (this.isCorrect) {
+          if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
+          else if (playerPosX > this.playableAreaEndX && playerPosY < this.playableAreaEndMaxY) this.player.moveDown();
+        }
       }
-    }
-    if (keyListener.isKeyDown(KeyListener.KEY_A)) {
-      if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
-      if (this.isCorrect) {
-        if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
-        else if (playerPosX - 10 > this.playableAreaRightX && playerPosY < this.playableAreaBridgeY) this.player.moveLeft();
-        else if (playerPosY > this.playableAreaBridgeY && (playerPosX > this.playableAreaRightX || playerPosX > this.playableAreaBridgeX)) this.player.moveLeft();
+      if (keyListener.isKeyDown(KeyListener.KEY_A)) {
+        if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
+        if (this.isCorrect) {
+          if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
+          else if (playerPosX - 10 > this.playableAreaRightX && playerPosY < this.playableAreaBridgeY) this.player.moveLeft();
+          else if (playerPosY > this.playableAreaBridgeY && (playerPosX > this.playableAreaRightX || playerPosX > this.playableAreaBridgeX)) this.player.moveLeft();
+        }
       }
-    }
-    if (keyListener.isKeyDown(KeyListener.KEY_D)) {
-      if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
-      if (this.isCorrect) {
-        if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();
-        else if (playerPosY < this.playableAreaBridgeY && playerPosX + 10 < this.playableAreaLeftMaxX) this.player.moveRight();
-        else if (playerPosX > this.playableAreaRightX && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
-        else if (playerPosX > this.playableAreaEndX && playerPosY + 10 > this.playableAreaEndY && playerPosY - 10 < this.playableAreaEndMaxY) this.player.moveRight();
+      if (keyListener.isKeyDown(KeyListener.KEY_D)) {
+        if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
+        if (this.isCorrect) {
+          if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();
+          else if (playerPosY < this.playableAreaBridgeY && playerPosX + 10 < this.playableAreaLeftMaxX) this.player.moveRight();
+          else if (playerPosX > this.playableAreaRightX && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
+          else if (playerPosX > this.playableAreaEndX && playerPosY + 10 > this.playableAreaEndY && playerPosY - 10 < this.playableAreaEndMaxY) this.player.moveRight();
+        }
       }
-    }
-    if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
-    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
-      this.gameObjects.forEach((object: GameObject) => {
-        if (object instanceof Rock && object.getIsSpecial()) object.setIsSpecial(false);
-      });
+      if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
+      if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+        this.gameObjects.forEach((object: GameObject) => {
+          if (object instanceof Rock && object.getIsSpecial()) object.setIsSpecial(false);
+        });
+      }
     }
   }
 
@@ -178,13 +191,19 @@ export default class LevelOne extends Scene {
       this.gameObjects.forEach((plate: GameObject) => {
         if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate) && !rock.getStatusCarried()) {
           plate.setIsSet(true);
+          rock.setIsSpecial(true);
+          rock.setPosX(plate.getPosX() - 5);
+          rock.setPosY(plate.getPosY() - rock.getHeight() * 0.3);
         }
       });
     });
 
     this.gameObjects.forEach((plate: GameObject) => {
       if (plate instanceof Plate && plate.getIsSet()) this.numOfSetPlates += 1;
-      if (this.numOfSetPlates === 3) this.isCorrect = true;
+      if (this.numOfSetPlates === 3) {
+        this.isInCutscene = true;
+        this.isCorrect = true;
+      }
     });
     this.numOfSetPlates = 0;
 
@@ -195,6 +214,17 @@ export default class LevelOne extends Scene {
         }
       });
     }
+
+    if (this.isInCutscene) this.cutsceneTimeLeft -= elapsed;
+    if (this.cutsceneTimeLeft < 0) this.isInCutscene = false;
+    if (this.isInCutscene && this.blackBarLength <= 50) {
+      this.blackBarLength += elapsed * 0.1;
+    }
+    if (!this.isInCutscene && this.blackBarLength >= 0) {
+      console.log('test');
+      this.blackBarLength -= elapsed * 0.1;
+    }
+    console.log(`Cutscene: ${this.isInCutscene}`);
 
     this.isUsing = false;
     return null;
@@ -209,7 +239,7 @@ export default class LevelOne extends Scene {
     // renders rocks infront of plates
     this.gameObjects.forEach((rock: GameObject) => {
       this.gameObjects.forEach((plate: GameObject) => {
-        if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate)) {
+        if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate) && !rock.getStatusCarried()) {
           plate.render(canvas);
           rock.render(canvas);
           if (plate.getIsSet()) this.player.render(canvas);
@@ -237,6 +267,9 @@ export default class LevelOne extends Scene {
         }
       }
     });
+
+    CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
+    CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');
 
     if (this.player.getPosX() > this.playableAreaEndMaxX) {
       CanvasUtil.fillCanvas(canvas, 'white');
