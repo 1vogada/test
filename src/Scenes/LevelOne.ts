@@ -8,11 +8,16 @@ import GameObject from '../GameObjects/GameObject.js';
 import Rock from '../GameObjects/Rock.js';
 import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/Bridge.js';
+import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
 
 export default class LevelOne extends Scene {
   private player: Player;
 
   private helper: Helper;
+
+  private dialogue: DialogueLevelOne;
+
+  private dialogueStarted: boolean;
 
   private gameObjects: GameObject[] = [];
 
@@ -61,7 +66,6 @@ export default class LevelOne extends Scene {
     this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
     this.player = new Player();
     this.gameObjects.push(new Helper(600, 700));
-
     this.playableAreaLeftMaxX = maxX / 2;
     this.playableAreaLeftMaxY = 865;
     this.playableAreaLeftX = 0;
@@ -93,6 +97,7 @@ export default class LevelOne extends Scene {
     this.hasRock = false;
     this.isTalking = false;
     this.isCorrect = false;
+    this.dialogueStarted = false;
   }
 
   public processInput(keyListener: KeyListener): void {
@@ -134,7 +139,23 @@ export default class LevelOne extends Scene {
       }
     }
     if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
-    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) this.isCorrect = true;
+    if (keyListener.keyPressed(KeyListener.KEY_SPACE)) {
+      this.isUsing = true;
+      this.dialogue.upCount('');
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogue.upCount('A');
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogue.upCount('B');
+      this.isCorrect = true;
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogue.upCount('C');
+    }
   }
 
   public update(elapsed: number): Scene {
@@ -185,16 +206,12 @@ export default class LevelOne extends Scene {
     });
 
     this.gameObjects.forEach((object: GameObject) => {
-      if (this.isTalking) {
-        CanvasUtil.fillRectangle(canvas, 50, 50, 500, 200, 'black');
-        CanvasUtil.writeTextToCanvas(canvas, 'What u do', 60, 100, 'left', 'sans-serif', 25, 'white');
-        CanvasUtil.writeTextToCanvas(canvas, '1', 60, 130, 'left', 'sans-serif', 25, 'white');
-        CanvasUtil.writeTextToCanvas(canvas, '2', 60, 160, 'left', 'sans-serif', 25, 'white');
-        CanvasUtil.writeTextToCanvas(canvas, '3', 60, 190, 'left', 'sans-serif', 25, 'white');
-        if (this.isCorrect) {
-          CanvasUtil.fillRectangle(canvas, 50, 50, 500, 200, 'black');
-          CanvasUtil.writeTextToCanvas(canvas, 'U can pass now', 60, 100, 'left', 'sans-serif', 25, 'white');
-        }
+      if (this.isTalking && !this.dialogueStarted) {
+        this.dialogue = new DialogueLevelOne(500, 500);
+        this.dialogueStarted = true;
+      }
+      if (this.dialogueStarted) {
+        this.dialogue.render(canvas);
       }
     });
 
