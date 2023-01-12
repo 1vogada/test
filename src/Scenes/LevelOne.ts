@@ -100,12 +100,12 @@ export default class LevelOne extends Scene {
     this.gameObjects.push(new Rock(600, 300, false));
     this.gameObjects.push(new Rock(300, 550, false));
     this.gameObjects.push(new Rock(550, 750, true));
-    this.gameObjects.push(new Bridge(1050, 300));
-    this.gameObjects.push(new Bridge(1150, 550));
-    this.gameObjects.push(new Bridge(1250, 750));
+    this.gameObjects.push(new Bridge(1048, 300));
+    this.gameObjects.push(new Bridge(1154, 550));
+    this.gameObjects.push(new Bridge(1259, 750));
     this.gameObjects.push(new Plate(900, 300));
-    this.gameObjects.push(new Plate(900, 500));
-    this.gameObjects.push(new Plate(900, 700));
+    this.gameObjects.push(new Plate(900, 450));
+    this.gameObjects.push(new Plate(900, 600));
 
     this.isUsing = false;
     this.hasRock = false;
