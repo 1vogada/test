@@ -61,9 +61,7 @@ export default class DialogueLevelOne extends DialogueBox {
         this.count = 0;
         this.state = 3;
       } else {
-        this.image = CanvasUtil.loadNewImage(
-          `../assets/LevelOne/w${this.count}.png`,
-        );
+        this.image = CanvasUtil.loadNewImage(`../assets/LevelOne/w${this.count}.png`);
       }
       if (this.count === 3) this.beforeAnswer = false;
       this.count += 1;
@@ -76,12 +74,15 @@ export default class DialogueLevelOne extends DialogueBox {
         this.image = CanvasUtil.loadNewImage(
           `../assets/LevelOne/c${this.count}.png`,
         );
-        if (this.count === 2) {
-          this.isFinished = true;
-        }
+      } else if (this.count === 3) {
+        this.image = CanvasUtil.loadNewImage('../assets/LevelOne/d0.png');
+      }
+      if (this.count === 4) {
+        this.isFinished = true;
       }
       this.count += 1;
     }
+
     if (this.isFinished) {
       this.image = CanvasUtil.loadNewImage('../assets/blank.png');
     }
