@@ -139,7 +139,7 @@ export default class LevelOne extends Scene {
       }
     }
     if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
-    if (keyListener.keyPressed(KeyListener.KEY_SPACE)) {
+    if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
       this.isUsing = true;
       this.dialogue.upCount('');
     }
