@@ -249,7 +249,6 @@ export default class LevelOne extends Scene {
           plate.setIsSet(true);
           // Locks the rock in place and snaps it to the appropriate position
           rock.setIsSpecial(true);
-          this.soundEffect.playSound('plateActive');
           rock.setPosX(plate.getPosX() - 5);
           rock.setPosY(plate.getPosY() - rock.getHeight() * 0.3);
         }
