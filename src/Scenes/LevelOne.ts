@@ -21,20 +21,20 @@ export default class LevelOne extends Scene {
   private gameObjects: GameObject[] = [];
 
   // Playable area: LEFT
-  private playableAreaLeftX:number;
+  private playableAreaLeftX: number;
 
-  private playableAreaLeftY:number;
+  private playableAreaLeftY: number;
 
-  private playableAreaLeftMaxX:number;
+  private playableAreaLeftMaxX: number;
 
   private playableAreaLeftMaxY: number;
 
   // Playable area: BRIDGE
-  private playableAreaBridgeX:number;
+  private playableAreaBridgeX: number;
 
-  private playableAreaBridgeY:number;
+  private playableAreaBridgeY: number;
 
-  private playableAreaBridgeMaxX:number;
+  private playableAreaBridgeMaxX: number;
 
   private playableAreaBridgeMaxY: number;
 
@@ -272,15 +272,13 @@ export default class LevelOne extends Scene {
       }
     });
 
-    this.gameObjects.forEach((object: GameObject) => {
-      if (this.isTalking && !this.dialogueStarted) {
-        this.dialogue = new DialogueLevelOne(500, 500);
-        this.dialogueStarted = true;
-      }
-      if (this.dialogueStarted) {
-        this.dialogue.render(canvas);
-      }
-    });
+    if (this.isTalking && !this.dialogueStarted) {
+      this.dialogue = new DialogueLevelOne(500, 500);
+      this.dialogueStarted = true;
+    }
+    if (this.dialogueStarted) {
+      this.dialogue.render(canvas);
+    }
 
     CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
     CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');
