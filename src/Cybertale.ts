@@ -2,7 +2,7 @@ import { Game } from './GameLoop.js';
 import CanvasUtil from './CanvasUtil.js';
 import KeyListener from './KeyListener.js';
 import Scene from './Scenes/Scene.js';
-import SceneStart from './Scenes/SceneStart.js';
+import SceneGameStart from './Scenes/SceneGameStart.js';
 
 export default class Cybertale extends Game {
   private canvas: HTMLCanvasElement;
@@ -18,7 +18,7 @@ export default class Cybertale extends Game {
     this.canvas.width = window.innerWidth;
     this.keyListener = new KeyListener();
 
-    this.currentScene = new SceneStart(this.canvas.width, this.canvas.height);
+    this.currentScene = new SceneGameStart(this.canvas.width, this.canvas.height);
   }
 
   /**
