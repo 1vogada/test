@@ -9,27 +9,42 @@ import Rock from '../GameObjects/Rock.js';
 import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/Bridge.js';
 import Plate from '../GameObjects/Plate.js';
+import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
+import SoundEffectPlayer from '../SoundEffectPlayer.js';
+import MusicPlayer from '../MusicPlayer.js';
 
 export default class LevelOne extends Scene {
+  private soundEffect: SoundEffectPlayer;
+
+  private music: MusicPlayer;
+
   private player: Player;
+
+  private dialogue: DialogueLevelOne;
+
+  private dialogueStarted: boolean;
 
   private gameObjects: GameObject[] = [];
 
+  private isFullScreen: boolean;
+
+  private firstRun: boolean;
+
   // Playable area: LEFT
-  private playableAreaLeftX:number;
+  private playableAreaLeftX: number;
 
-  private playableAreaLeftY:number;
+  private playableAreaLeftY: number;
 
-  private playableAreaLeftMaxX:number;
+  private playableAreaLeftMaxX: number;
 
   private playableAreaLeftMaxY: number;
 
   // Playable area: BRIDGE
-  private playableAreaBridgeX:number;
+  private playableAreaBridgeX: number;
 
-  private playableAreaBridgeY:number;
+  private playableAreaBridgeY: number;
 
-  private playableAreaBridgeMaxX:number;
+  private playableAreaBridgeMaxX: number;
 
   private playableAreaBridgeMaxY: number;
 
@@ -67,16 +82,23 @@ export default class LevelOne extends Scene {
 
   private blackBarLength: number;
 
+  // Sound gates
+  private musicStartGate: boolean;
+
+  private winSoundGate: boolean;
+
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
     this.player = new Player();
     this.gameObjects.push(new Helper(600, 700));
-
+    this.soundEffect = new SoundEffectPlayer();
+    this.music = new MusicPlayer();
     this.playableAreaLeftMaxX = maxX / 2;
     this.playableAreaLeftMaxY = 865;
     this.playableAreaLeftX = 0;
     this.playableAreaLeftY = 290;
+    this.isFullScreen = false;
 
     this.playableAreaBridgeMaxX = 1350;
     this.playableAreaBridgeMaxY = 850;
@@ -96,31 +118,45 @@ export default class LevelOne extends Scene {
     this.gameObjects.push(new Rock(600, 300, false));
     this.gameObjects.push(new Rock(300, 550, false));
     this.gameObjects.push(new Rock(550, 750, true));
-    this.gameObjects.push(new Bridge(1050, 300));
-    this.gameObjects.push(new Bridge(1150, 550));
-    this.gameObjects.push(new Bridge(1250, 750));
+    this.gameObjects.push(new Bridge(1048, 300));
+    this.gameObjects.push(new Bridge(1154, 550));
+    this.gameObjects.push(new Bridge(1259, 750));
     this.gameObjects.push(new Plate(900, 300));
-    this.gameObjects.push(new Plate(900, 500));
-    this.gameObjects.push(new Plate(900, 700));
+    this.gameObjects.push(new Plate(900, 450));
+    this.gameObjects.push(new Plate(900, 600));
 
     this.isUsing = false;
     this.hasRock = false;
     this.isTalking = false;
     this.isCorrect = false;
     this.numOfSetPlates = 0;
-    this.cutsceneTimeLeft = 2700;
+    this.cutsceneTimeLeft = 4500;
     this.blackBarLength = 0;
     this.isInCutscene = false;
+    this.dialogueStarted = false;
+    this.firstRun = true;
+    // sound bools and other sound stuff
+    this.musicStartGate = true;
+    this.winSoundGate = true;
+    // Music start
+    this.music.playSound('levelOneMusic');
   }
 
   public processInput(keyListener: KeyListener): void {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
     const playerPosX: number = this.player.getPosX();
 
+    // Servers as a debugging function
     if (keyListener.keyPressed(KeyListener.KEY_O)) this.numOfSetPlates = 0;
     if (keyListener.keyPressed(KeyListener.KEY_P)) this.numOfSetPlates = 3;
+
+    // Reloads the game (page reload)
     if (keyListener.keyPressed(KeyListener.KEY_ESC)) window.location.reload();
+
+    // Player movement
+    // Disables movement when the player is in a Cutscene
     if (!this.isInCutscene) {
+      // Player Move UP
       if (keyListener.isKeyDown(KeyListener.KEY_W)) {
         if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
         if (this.isCorrect) {
@@ -130,6 +166,7 @@ export default class LevelOne extends Scene {
           else if (playerPosX > this.playableAreaEndX && playerPosY > this.playableAreaEndY) this.player.moveUp();
         }
       }
+      // Player Move DOWN
       if (keyListener.isKeyDown(KeyListener.KEY_S)) {
         if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
         if (this.isCorrect) {
@@ -137,6 +174,7 @@ export default class LevelOne extends Scene {
           else if (playerPosX > this.playableAreaEndX && playerPosY < this.playableAreaEndMaxY) this.player.moveDown();
         }
       }
+      // Player Move LEFT
       if (keyListener.isKeyDown(KeyListener.KEY_A)) {
         if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
         if (this.isCorrect) {
@@ -145,6 +183,7 @@ export default class LevelOne extends Scene {
           else if (playerPosY > this.playableAreaBridgeY && (playerPosX > this.playableAreaRightX || playerPosX > this.playableAreaBridgeX)) this.player.moveLeft();
         }
       }
+      // Player Move RIGHT
       if (keyListener.isKeyDown(KeyListener.KEY_D)) {
         if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
         if (this.isCorrect) {
@@ -154,8 +193,24 @@ export default class LevelOne extends Scene {
           else if (playerPosX > this.playableAreaEndX && playerPosY + 10 > this.playableAreaEndY && playerPosY - 10 < this.playableAreaEndMaxY) this.player.moveRight();
         }
       }
+      // Player USE Button
       if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
+      // Button for when the player is in dialogue; SPACE Advances the dialogue further
+      if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
+        this.dialogue.upCount('');
+      }
+      // Choose option buttons
+      if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('A');
+      }
+      if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('C');
+      }
       if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount('B');
         this.gameObjects.forEach((object: GameObject) => {
           if (object instanceof Rock && object.getIsSpecial()) object.setIsSpecial(false);
         });
@@ -187,10 +242,12 @@ export default class LevelOne extends Scene {
       }
     });
 
+    // Logic for when the pressure plate is pressed by a rock
     this.gameObjects.forEach((rock: GameObject) => {
       this.gameObjects.forEach((plate: GameObject) => {
         if (rock instanceof Rock && plate instanceof Plate && rock.collideWithObject(plate) && !rock.getStatusCarried()) {
           plate.setIsSet(true);
+          // Locks the rock in place and snaps it to the appropriate position
           rock.setIsSpecial(true);
           rock.setPosX(plate.getPosX() - 5);
           rock.setPosY(plate.getPosY() - rock.getHeight() * 0.3);
@@ -209,24 +266,34 @@ export default class LevelOne extends Scene {
 
     if (this.isCorrect) {
       this.gameObjects.forEach((object: GameObject) => {
-        if (object instanceof Bridge && object.getPosY() < 750) {
-          object.setPosY(object.getPosY() + elapsed * 0.2);
+        if (object instanceof Bridge && object.getPosY() < 750 && this.cutsceneTimeLeft < 3500) {
+          object.setPosY(object.getPosY() + elapsed * 0.15);
         }
       });
     }
 
     if (this.isInCutscene) this.cutsceneTimeLeft -= elapsed;
     if (this.cutsceneTimeLeft < 0) this.isInCutscene = false;
-    if (this.isInCutscene && this.blackBarLength <= 50) {
+    if (this.isInCutscene && this.blackBarLength <= 100) {
       this.blackBarLength += elapsed * 0.1;
     }
-    if (!this.isInCutscene && this.blackBarLength >= 0) {
+    if (!this.isInCutscene && this.blackBarLength >= 0 && this.cutsceneTimeLeft < 0) {
       console.log('test');
       this.blackBarLength -= elapsed * 0.1;
     }
     console.log(`Cutscene: ${this.isInCutscene}`);
-
+    console.log(this.cutsceneTimeLeft);
     this.isUsing = false;
+
+    if (this.dialogueStarted) {
+      if (this.dialogue.getIsFinished()) {
+        this.gameObjects.forEach((object: GameObject) => {
+          if (object instanceof Helper) {
+            object.moveSans();
+          }
+        });
+      }
+    }
     return null;
   }
 
@@ -254,26 +321,26 @@ export default class LevelOne extends Scene {
       }
     });
 
-    this.gameObjects.forEach((object: GameObject) => {
-      if (this.isTalking) {
-        CanvasUtil.fillRectangle(canvas, 50, 50, 500, 200, 'black');
-        CanvasUtil.writeTextToCanvas(canvas, 'What u do', 60, 100, 'left', 'sans-serif', 25, 'white');
-        CanvasUtil.writeTextToCanvas(canvas, '1', 60, 130, 'left', 'sans-serif', 25, 'white');
-        CanvasUtil.writeTextToCanvas(canvas, '2', 60, 160, 'left', 'sans-serif', 25, 'white');
-        CanvasUtil.writeTextToCanvas(canvas, '3', 60, 190, 'left', 'sans-serif', 25, 'white');
-        if (this.isCorrect) {
-          CanvasUtil.fillRectangle(canvas, 50, 50, 500, 200, 'black');
-          CanvasUtil.writeTextToCanvas(canvas, 'U can pass now', 60, 100, 'left', 'sans-serif', 25, 'white');
-        }
-      }
-    });
+    if (this.isTalking && !this.dialogueStarted) {
+      this.dialogue = new DialogueLevelOne(500, 500);
+      this.dialogueStarted = true;
+    }
+    if (this.dialogueStarted) {
+      this.dialogue.render(canvas);
+    }
 
     CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
     CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');
 
     if (this.player.getPosX() > this.playableAreaEndMaxX) {
+      this.isInCutscene = true;
       CanvasUtil.fillCanvas(canvas, 'white');
       CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
+      if (this.winSoundGate) {
+        this.music.stopSound();
+        this.soundEffect.playSound('win');
+        this.winSoundGate = false;
+      }
     }
   }
 }

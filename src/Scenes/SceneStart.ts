@@ -2,9 +2,14 @@ import CanvasUtil from '../CanvasUtil.js';
 import KeyListener from '../KeyListener.js';
 import LevelOne from './LevelOne.js';
 import Scene from './Scene.js';
+import MusicPlayer from '../MusicPlayer.js';
 
 export default class SceneStart extends Scene {
   private starting: boolean;
+
+  public music: MusicPlayer;
+
+  private firstStart: boolean;
 
   // choice - 0 to 3 => 1 for LevelOne, 2 for LevelTwo, 3 for LevelThree
   private choice: number;
@@ -14,6 +19,8 @@ export default class SceneStart extends Scene {
     this.starting = false;
     this.background = CanvasUtil.loadNewImage('./assets/backgroundSceneStart.png');
     this.choice = 0;
+    this.music = new MusicPlayer();
+    this.firstStart = true;
   }
 
   /**
@@ -41,9 +48,14 @@ export default class SceneStart extends Scene {
    * @returns next Scene
    */
   public override update(): Scene {
+    if (this.firstStart) {
+      this.firstStart = false;
+      this.music.playSound('mainMenu');
+    }
     if (this.starting) {
       switch (this.choice) {
         case 1:
+          this.music.stopSound();
           return new LevelOne(this.maxX, this.maxY);
         case 2:
         case 3:
@@ -51,6 +63,7 @@ export default class SceneStart extends Scene {
           break;
       }
     }
+
     return null;
   }
 
