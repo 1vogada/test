@@ -34,4 +34,11 @@ export default class MusicPlayer {
     this.audio.pause();
     this.audio.currentTime = 0;
   }
+
+  /**
+   *
+   */
+  public pauseSound() : void {
+    this.audio.pause();
+  }
 }

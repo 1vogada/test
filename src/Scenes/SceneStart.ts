@@ -7,7 +7,7 @@ import MusicPlayer from '../MusicPlayer.js';
 export default class SceneStart extends Scene {
   private starting: boolean;
 
-  private music: MusicPlayer;
+  public music: MusicPlayer;
 
   private firstStart: boolean;
 
@@ -33,9 +33,6 @@ export default class SceneStart extends Scene {
       this.starting = true;
       this.choice = 1;
     }
-    if (keyListener.keyPressed(KeyListener.KEY_M)) {
-      this.music.playSound('mainMenu');
-    }
     // Remove commenting when Level 2 and 3 are implemented
     // if (keyListener.keyPressed(KeyListener.KEY_2)) {
     // this.starting = true;
@@ -59,7 +56,6 @@ export default class SceneStart extends Scene {
       switch (this.choice) {
         case 1:
           this.music.stopSound();
-          this.music.playSound('levelOneMusic');
           return new LevelOne(this.maxX, this.maxY);
         case 2:
         case 3:

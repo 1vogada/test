@@ -10,8 +10,14 @@ import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/Bridge.js';
 import Plate from '../GameObjects/Plate.js';
 import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
+import SoundEffectPlayer from '../SoundEffectPlayer.js';
+import MusicPlayer from '../MusicPlayer.js';
 
 export default class LevelOne extends Scene {
+  private soundEffect: SoundEffectPlayer;
+
+  private music: MusicPlayer;
+
   private player: Player;
 
   private dialogue: DialogueLevelOne;
@@ -20,7 +26,7 @@ export default class LevelOne extends Scene {
 
   private gameObjects: GameObject[] = [];
 
-  public isFullScreen: boolean;
+  private isFullScreen: boolean;
 
   private firstRun: boolean;
 
@@ -76,11 +82,18 @@ export default class LevelOne extends Scene {
 
   private blackBarLength: number;
 
+  // Sound gates
+  private musicStartGate: boolean;
+
+  private winSoundGate: boolean;
+
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
     this.player = new Player();
     this.gameObjects.push(new Helper(600, 700));
+    this.soundEffect = new SoundEffectPlayer();
+    this.music = new MusicPlayer();
     this.playableAreaLeftMaxX = maxX / 2;
     this.playableAreaLeftMaxY = 865;
     this.playableAreaLeftX = 0;
@@ -122,6 +135,11 @@ export default class LevelOne extends Scene {
     this.isInCutscene = false;
     this.dialogueStarted = false;
     this.firstRun = true;
+    // sound bools and other sound stuff
+    this.musicStartGate = true;
+    this.winSoundGate = true;
+    // Music start
+    this.music.playSound('levelOneMusic');
   }
 
   public processInput(keyListener: KeyListener): void {
@@ -318,6 +336,11 @@ export default class LevelOne extends Scene {
       this.isInCutscene = true;
       CanvasUtil.fillCanvas(canvas, 'white');
       CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
+      if (this.winSoundGate) {
+        this.music.stopSound();
+        this.soundEffect.playSound('win');
+        this.winSoundGate = false;
+      }
     }
   }
 }

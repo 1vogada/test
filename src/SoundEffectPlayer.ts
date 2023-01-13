@@ -1,37 +1,39 @@
 export default class SoundEffectPlayer {
-  private trackName: string;
-
-  private audio: HTMLAudioElement;
+  private soundName: string;
 
   public constructor() {
-    this.trackName = '';
-    this.audio = new Audio('../assets/Sound/Music/blank.mp3');
+    this.soundName = '';
   }
 
   /**
    *
-   * @param track is the track to be played
+   * @param sound is the sound to be played
    */
   // eslint-disable-next-line class-methods-use-this
-  public playSound(track: string) : void {
-    switch (track) {
-      case 'mainMenu':
-        this.audio = new Audio('../assets/Sound/Music/mainMenu.mp3');
+  public playSound(sound: string) : void {
+    let audio = new Audio('../assets/Sound/SoundEffects/blank.mp3');
+    switch (sound) {
+      case 'itemPickUp':
+        audio = new Audio('../assets/Sound/SoundEffects/itemPickUp.mp3');
         break;
-      case 'levelOneMusic':
-        this.audio = new Audio('../assets/Sound/Music/levelOneMusic.mp3');
+      case 'plateActive':
+        audio = new Audio('../assets/Sound/SoundEffects/plateActive.mp3');
+        break;
+      case 'sansDia':
+        audio = new Audio('../assets/Sound/SoundEffects/sansDia.mp3');
+        break;
+      case 'waterMoving':
+        audio = new Audio('../assets/Sound/SoundEffects/waterMoving.mp3');
+        break;
+      case 'win':
+        audio = new Audio('../assets/Sound/SoundEffects/win.mp3');
+        break;
+      case 'rockPickUp':
+        audio = new Audio('../assets/Sound/SoundEffects/rockPickUp.mp3');
         break;
       default:
         break;
     }
-    this.audio.play();
-  }
-
-  /**
-   *
-   */
-  public stopSound() : void {
-    this.audio.pause();
-    this.audio.currentTime = 0;
+    audio.play();
   }
 }
