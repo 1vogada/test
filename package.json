@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "type": "module",
-  "homepage": "https://hz-oop.github.io/",
+  "homepage": "https://hz-oop.github.io/team12",
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch ",
