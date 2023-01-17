@@ -1,5 +1,5 @@
-import CanvasUtil from '../CanvasUtil.js';
-import GameObject from './GameObject.js';
+import CanvasUtil from '../../CanvasUtil.js';
+import GameObject from '../GameObject.js';
 
 export default class Plate extends GameObject {
   private isSet: boolean;
