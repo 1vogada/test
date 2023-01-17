@@ -4,7 +4,7 @@
   "repository": "https://github.com/HZ-OOP/team12.git",
   "author": "TonevS, Damyan03, 1vogada, IvanK17",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "type": "module",
   "homepage": "https://hz-oop.github.io/team12",
   "scripts": {
