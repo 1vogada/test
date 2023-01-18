@@ -2,12 +2,13 @@ import CanvasUtil from '../CanvasUtil.js';
 import DialogueBox from './DialogueBox.js';
 
 export default class DialogueLevelOne extends DialogueBox {
-  private playerDialogue: boolean;
-
+  // if the dialogue is finished
   private isFinished: boolean;
 
-  private beforeAnswer: boolean;
-
+  // 1 - starting dialogue, can't go once finished
+  // 2 - repeating dialogue, repeated after end of wrong choice dialogue
+  // 3 - ending dialogue, accessible after correct choice
+  // 4 - wrong dialogue, accessible after wrong choice
   private state: number;
 
   public constructor(posX: number, posY: number) {
@@ -17,9 +18,7 @@ export default class DialogueLevelOne extends DialogueBox {
     this.posY = posY;
     this.count = 1;
     this.state = 1;
-    this.beforeAnswer = true;
-    this.playerDialogue = true;
-    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/d1.png');
+    this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/d${this.count}.png`);
   }
 
   /**
@@ -27,63 +26,47 @@ export default class DialogueLevelOne extends DialogueBox {
    *
    * @param choice gets the choice by user input
    */
-  public override upCount(choice: string): void {
-    if (this.state === 1 && !this.isFinished) {
+  public override upCount(choice: number): void {
+    if (!this.isFinished) {
       this.count += 1;
-      if (this.playerDialogue) {
-        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/d0.png');
-        this.count -= 1;
-        this.playerDialogue = false;
-      } else {
-        if (this.count === 2 || this.count === 5) {
-          this.playerDialogue = true;
+      if (this.state === 1 && this.count !== 0) {
+        this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/d${this.count}.png`);
+        if (this.count === 10) {
+          this.state = 2;
+          this.count = 0;
         }
-        this.image = CanvasUtil.loadNewImage(
-          `./assets/LevelOne/Dialogue/d${this.count}.png`,
-        );
       }
-      if (this.count === 7) {
-        this.state = 2;
-        this.count = 1;
+      if (this.state === 2 && this.count !== 0) {
+        if (this.count < 5) {
+          this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/q${this.count}.png`);
+        } else if (choice === null) {
+          this.state = 4;
+          this.count = 1;
+        } else if (choice === 1 || choice === 3) {
+          this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/o${choice}.png`);
+          this.state = 4;
+          this.count = 0;
+        } else {
+          this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/o${choice}.png`);
+          this.state = 3;
+          this.count = 0;
+        }
       }
-    } else if (this.state === 2 && !this.isFinished) {
-      if (this.beforeAnswer) {
-        this.image = CanvasUtil.loadNewImage(
-          `./assets/LevelOne/Dialogue/q${this.count}.png`,
-        );
-      } else if ((choice === 'A' || choice === 'C') && !this.beforeAnswer) {
-        this.image = CanvasUtil.loadNewImage(
-          `./assets/LevelOne/Dialogue/choice${choice}.png`,
-        );
-        this.count = 0;
-      } else if (choice === 'B' && !this.beforeAnswer) {
-        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/choiceB.png');
-        this.count = 0;
-        this.state = 3;
-      } else {
+      if (this.state === 3 && this.count !== 0) {
+        this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/c${this.count}.png`);
+        if (this.count === 3) {
+          this.count = 0;
+          this.isFinished = true;
+        }
+      }
+      if (this.state === 4 && this.count !== 0) {
         this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/w${this.count}.png`);
+        if (this.count === 6) {
+          this.count = 0;
+          this.state = 2;
+        }
       }
-      if (this.count === 3) this.beforeAnswer = false;
-      this.count += 1;
-      if (this.count > 6) {
-        this.count = 1;
-        this.beforeAnswer = true;
-      }
-    } else if (!this.isFinished) {
-      if (this.count < 3) {
-        this.image = CanvasUtil.loadNewImage(
-          `./assets/LevelOne/Dialogue/c${this.count}.png`,
-        );
-      } else if (this.count === 3) {
-        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/d0.png');
-      }
-      if (this.count === 4) {
-        this.isFinished = true;
-      }
-      this.count += 1;
-    }
-
-    if (this.isFinished) {
+    } else {
       this.image = CanvasUtil.loadNewImage('./assets/blank.png');
     }
   }

@@ -156,19 +156,19 @@ export default class LevelOne extends Scene {
             if (keyListener.keyPressed(KeyListener.KEY_E))
                 this.isUsing = true;
             if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
-                this.dialogue.upCount('');
+                this.dialogue.upCount(null);
             }
             if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
                 this.isUsing = true;
-                this.dialogue.upCount('A');
+                this.dialogue.upCount(1);
             }
             if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
                 this.isUsing = true;
-                this.dialogue.upCount('C');
+                this.dialogue.upCount(3);
             }
             if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
                 this.isUsing = true;
-                this.dialogue.upCount('B');
+                this.dialogue.upCount(2);
                 this.gameObjects.forEach((object) => {
                     if (object instanceof Rock && object.getIsSpecial())
                         object.setIsSpecial(false);

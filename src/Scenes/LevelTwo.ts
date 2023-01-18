@@ -12,6 +12,7 @@ import Donald from '../GameObjects/LevelTwo/Donald.js';
 import MusicPlayer from '../MusicPlayer.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
+import DialogueLevelTwo from '../Dialogue/DialogueLevelTwo.js';
 
 export default class LevelTwo extends Scene {
   private player: Player;
@@ -19,6 +20,14 @@ export default class LevelTwo extends Scene {
   private gameObjects: GameObject[] = [];
 
   private music: MusicPlayer;
+
+  private dialogueCrowbar: DialogueLevelTwo;
+
+  private dialogueCrowbarStarted: boolean;
+
+  private dialogueKey: DialogueLevelTwo;
+
+  private dialogueKeyStarted: boolean;
 
   private soundEffect: SoundEffectPlayer;
 
@@ -78,8 +87,8 @@ export default class LevelTwo extends Scene {
     this.isTalking = false;
     this.isCorrect = false;
     this.numOfSetPlates = 0;
-
-    this.isCorrect = false;
+    this.dialogueCrowbarStarted = false;
+    this.dialogueKeyStarted = false;
     this.music.playSound('levelTwoMusic');
   }
 
@@ -109,8 +118,27 @@ export default class LevelTwo extends Scene {
       else if (this.isCorrect && playerPosY + 10 > this.playableAreaRightY && playerPosY - 10 < this.playableAreaRightMaxY && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
       else if (this.isCorrect && playerPosX < this.playableAreaMainMaxX) this.player.moveRight();
     }
-    if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
     if (keyListener.keyPressed(KeyListener.KEY_O)) this.isCorrect = true;
+
+    // Player USE Button
+    if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
+    // Button for when the player is in dialogue; SPACE Advances the dialogue further
+    if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
+      this.dialogueCrowbar.upCount(null);
+    }
+    // Choose option buttons
+    if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogueCrowbar.upCount(1);
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogueCrowbar.upCount(3);
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogueCrowbar.upCount(2);
+    }
   }
 
   public update(elapsed: number): Scene {
@@ -162,5 +190,12 @@ export default class LevelTwo extends Scene {
     CanvasUtil.drawImage(canvas, this.background, 0, 0);
     this.player.render(canvas);
     this.gameObjects.forEach((object: GameObject) => object.render(canvas));
+    if (this.isTalking && !this.dialogueCrowbarStarted) {
+      this.dialogueCrowbar = new DialogueLevelTwo(500, 500, 'Crowbar');
+      this.dialogueCrowbarStarted = true;
+    }
+    if (this.dialogueCrowbarStarted) {
+      this.dialogueCrowbar.render(canvas);
+    }
   }
 }

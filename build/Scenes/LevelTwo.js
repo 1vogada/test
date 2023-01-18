@@ -8,10 +8,15 @@ import Key from '../GameObjects/LevelTwo/Key.js';
 import Donald from '../GameObjects/LevelTwo/Donald.js';
 import MusicPlayer from '../MusicPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
+import DialogueLevelTwo from '../Dialogue/DialogueLevelTwo.js';
 export default class LevelTwo extends Scene {
     player;
     gameObjects = [];
     music;
+    dialogueCrowbar;
+    dialogueCrowbarStarted;
+    dialogueKey;
+    dialogueKeyStarted;
     soundEffect;
     isCorrect;
     isUsing;
@@ -49,7 +54,8 @@ export default class LevelTwo extends Scene {
         this.isTalking = false;
         this.isCorrect = false;
         this.numOfSetPlates = 0;
-        this.isCorrect = false;
+        this.dialogueCrowbarStarted = false;
+        this.dialogueKeyStarted = false;
         this.music.playSound('levelTwoMusic');
     }
     processInput(keyListener) {
@@ -83,10 +89,25 @@ export default class LevelTwo extends Scene {
             else if (this.isCorrect && playerPosX < this.playableAreaMainMaxX)
                 this.player.moveRight();
         }
-        if (keyListener.keyPressed(KeyListener.KEY_E))
-            this.isUsing = true;
         if (keyListener.keyPressed(KeyListener.KEY_O))
             this.isCorrect = true;
+        if (keyListener.keyPressed(KeyListener.KEY_E))
+            this.isUsing = true;
+        if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
+            this.dialogueCrowbar.upCount(null);
+        }
+        if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
+            this.isUsing = true;
+            this.dialogueCrowbar.upCount(1);
+        }
+        if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+            this.isUsing = true;
+            this.dialogueCrowbar.upCount(3);
+        }
+        if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+            this.isUsing = true;
+            this.dialogueCrowbar.upCount(2);
+        }
     }
     update(elapsed) {
         console.log(this.maxX);
@@ -128,6 +149,13 @@ export default class LevelTwo extends Scene {
         CanvasUtil.drawImage(canvas, this.background, 0, 0);
         this.player.render(canvas);
         this.gameObjects.forEach((object) => object.render(canvas));
+        if (this.isTalking && !this.dialogueCrowbarStarted) {
+            this.dialogueCrowbar = new DialogueLevelTwo(500, 500, 'Crowbar');
+            this.dialogueCrowbarStarted = true;
+        }
+        if (this.dialogueCrowbarStarted) {
+            this.dialogueCrowbar.render(canvas);
+        }
     }
 }
 //# sourceMappingURL=LevelTwo.js.map
