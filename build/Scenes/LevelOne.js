@@ -218,9 +218,9 @@ export default class LevelOne extends Scene {
         });
         this.numOfSetPlates = 0;
         if (this.isCorrect) {
-            this.gameObjects.forEach((object) => {
-                if (object instanceof Bridge && object.getPosY() < 750 && this.cutsceneTimeLeft < 3500) {
-                    object.setPosY(object.getPosY() + elapsed * 0.15);
+            this.gameObjects.forEach((bridge) => {
+                if (bridge instanceof Bridge && bridge.getPosY() < 750 && this.cutsceneTimeLeft < 3500) {
+                    bridge.setPosY(bridge.getPosY() + elapsed * 0.15);
                 }
             });
         }
