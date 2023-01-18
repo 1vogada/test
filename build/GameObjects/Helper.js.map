@@ -1,0 +1,1 @@
+{"version":3,"file":"Helper.js","sourceRoot":"","sources":["../../src/GameObjects/Helper.ts"],"names":[],"mappings":"AAAA,OAAO,UAAU,MAAM,iBAAiB,CAAC;AAEzC,MAAM,CAAC,OAAO,OAAgB,MAAO,SAAQ,UAAU;IAC9C,OAAO,CAAC,IAAY;QACzB,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;IACnB,CAAC;IAEM,OAAO,CAAC,IAAY;QACzB,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;IACnB,CAAC;CACF"}
