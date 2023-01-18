@@ -6,6 +6,7 @@ export default class Chest extends GameObject {
         this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chest.png');
         this.posX = posX;
         this.posY = posY;
+        this.image = CanvasUtil.loadNewImage('../assets/LevelTwo/Objects/chest.png');
     }
     isSet;
     setIsSet(status) {
@@ -15,8 +16,16 @@ export default class Chest extends GameObject {
     getIsSet() {
         return this.isSet;
     }
-    update(elapsed) {
-        console.log(elapsed * this.posX);
+    isSet;
+    setIsSet(status) {
+        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
+        this.isSet = status;
+    }
+    getIsSet() {
+        return this.isSet;
+    }
+    update() {
+        console.log(this.posX);
     }
 }
 //# sourceMappingURL=Chest.js.map

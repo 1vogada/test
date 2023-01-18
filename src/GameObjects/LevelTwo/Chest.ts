@@ -7,6 +7,18 @@ export default class Chest extends GameObject {
     this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chest.png');
     this.posX = posX;
     this.posY = posY;
+    this.image = CanvasUtil.loadNewImage('../assets/LevelTwo/Objects/chest.png');
+  }
+
+  private isSet: boolean;
+
+  public setIsSet(status: boolean): void {
+    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
+    this.isSet = status;
+  }
+
+  public getIsSet(): boolean {
+    return this.isSet;
   }
 
   private isSet: boolean;
@@ -21,10 +33,9 @@ export default class Chest extends GameObject {
   }
 
   /**
-   *
-   * @param elapsed asd
+   *update
    */
-  public override update(elapsed: number): void {
-    console.log(elapsed * this.posX);
+  public override update(): void {
+    console.log(this.posX);
   }
 }

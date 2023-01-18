@@ -7,6 +7,9 @@ import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
 import KeyListener from '../KeyListener.js';
 import Papy from '../GameObjects/LevelTwo/Papy.js';
+import Key from '../GameObjects/LevelTwo/Key.js';
+import KeyBroken from '../GameObjects/LevelTwo/KeyBroken.js';
+import Donald from '../GameObjects/LevelTwo/Donald.js';
 import MusicPlayer from '../MusicPlayer.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
@@ -53,6 +56,9 @@ export default class LevelTwo extends Scene {
     this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
     this.player = new Player(120, 300);
     this.gameObjects.push(new Papy(780, 230));
+    this.gameObjects.push(new Key(300, 500));
+    this.gameObjects.push(new KeyBroken(350, 500));
+    this.gameObjects.push(new Donald(1800, 500));
     this.music = new MusicPlayer();
 
     this.playableAreaMainMaxX = 1430;
