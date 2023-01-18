@@ -1,20 +1,12 @@
 import CanvasUtil from '../../CanvasUtil.js';
-import GameObject from '../GameObject.js';
+import Helper from '../Helper.js';
 
-export default class Helper extends GameObject {
+export default class Sans extends Helper {
   public constructor(posX: number, posY: number) {
     super();
     this.posX = posX;
     this.posY = posY;
-    this.image = CanvasUtil.loadNewImage('./assets/helper.png');
-  }
-
-  public setPosX(posX: number): void {
-    this.posX = posX;
-  }
-
-  public setPosY(posY: number): void {
-    this.posY = posY;
+    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/sans.png');
   }
 
   /**

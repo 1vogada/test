@@ -5,7 +5,7 @@ export default class MusicPlayer {
 
   public constructor() {
     this.trackName = '';
-    this.audio = new Audio('../assets/Sound/Music/blank.mp3');
+    this.audio = new Audio('./assets/Sound/Music/blank.mp3');
   }
 
   /**
@@ -16,10 +16,10 @@ export default class MusicPlayer {
   public playSound(track: string) : void {
     switch (track) {
       case 'mainMenu':
-        this.audio = new Audio('../assets/Sound/Music/mainMenu.mp3');
+        this.audio = new Audio('./assets/Sound/Music/mainMenu.mp3');
         break;
       case 'levelOneMusic':
-        this.audio = new Audio('../assets/Sound/Music/levelOneMusic.mp3');
+        this.audio = new Audio('./assets/Sound/Music/levelOneMusic.mp3');
         break;
       default:
         break;

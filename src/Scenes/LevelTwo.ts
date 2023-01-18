@@ -4,8 +4,8 @@ import Scene from './Scene.js';
 import Player from '../Player.js';
 import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
-import Helper from '../GameObjects/LevelOne/Helper.js';
 import KeyListener from '../KeyListener.js';
+import Papy from '../GameObjects/LevelTwo/Papy.js';
 
 export default class LevelTwo extends Scene {
   private player: Player;
@@ -34,9 +34,9 @@ export default class LevelTwo extends Scene {
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
-    this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLevelTwo.png');
+    this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
     this.player = new Player();
-    this.gameObjects.push(new Helper(600, 700));
+    this.gameObjects.push(new Papy(600, 700));
 
     this.playableAreaMainMaxX = 1430;
     this.playableAreaMainMaxY = 905;
@@ -53,7 +53,7 @@ export default class LevelTwo extends Scene {
 
   /**
    *
-   * @param keyListener
+   * @param keyListener АС
    */
   public processInput(keyListener: KeyListener): void {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
