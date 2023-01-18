@@ -5,10 +5,10 @@ export default class Key extends GameObject {
         super();
         this.posX = posX;
         this.posY = posY;
-        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/key.png');
+        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/key_broken.png');
     }
     update(elapsed) {
         console.log(elapsed * this.posX);
     }
 }
-//# sourceMappingURL=Key.js.map
+//# sourceMappingURL=KeyBroken.js.map

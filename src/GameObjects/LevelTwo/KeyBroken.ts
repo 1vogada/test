@@ -6,7 +6,7 @@ export default class Key extends GameObject {
     super();
     this.posX = posX;
     this.posY = posY;
-    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/key.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/key_broken.png');
   }
 
   /**

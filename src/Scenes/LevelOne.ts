@@ -13,6 +13,7 @@ import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import MusicPlayer from '../MusicPlayer.js';
 import Sans from '../GameObjects/LevelOne/Sans.js';
+import LevelTwo from './LevelTwo.js';
 
 export default class LevelOne extends Scene {
   private soundEffect: SoundEffectPlayer;
@@ -91,7 +92,7 @@ export default class LevelOne extends Scene {
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/LevelOne/backgroundLevelOne.png');
-    this.player = new Player();
+    this.player = new Player(400, 400);
     this.gameObjects.push(new Sans(600, 700));
     this.soundEffect = new SoundEffectPlayer();
     this.music = new MusicPlayer();
@@ -293,6 +294,18 @@ export default class LevelOne extends Scene {
         });
       }
     }
+    if (this.player.getPosX() > this.playableAreaEndMaxX) {
+      this.music.stopSound();
+      return new LevelTwo(this.maxX, this.maxY);
+      // this.isInCutscene = true;
+      // CanvasUtil.fillCanvas(canvas, 'white');
+      // CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
+      // if (this.winSoundGate) {
+      //   this.music.stopSound();
+      //   this.soundEffect.playSound('w in');
+      //   this.winSoundGate = false;
+      // }
+    }
     return null;
   }
 
@@ -330,16 +343,5 @@ export default class LevelOne extends Scene {
 
     CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
     CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');
-
-    if (this.player.getPosX() > this.playableAreaEndMaxX) {
-      this.isInCutscene = true;
-      CanvasUtil.fillCanvas(canvas, 'white');
-      CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
-      if (this.winSoundGate) {
-        this.music.stopSound();
-        this.soundEffect.playSound('win');
-        this.winSoundGate = false;
-      }
-    }
   }
 }

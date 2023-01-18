@@ -9,10 +9,10 @@ export default class Player extends Drawable {
 
   private speed: number;
 
-  public constructor() {
+  public constructor(playerPosX: number, playerPosY: number) {
     super();
-    this.posX = 400;
-    this.posY = 400;
+    this.posX = playerPosX;
+    this.posY = playerPosY;
     this.image = CanvasUtil.loadNewImage('./assets/malPlayer.png');
     this.speed = 3;
   }
