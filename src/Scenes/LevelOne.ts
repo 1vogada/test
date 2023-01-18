@@ -158,7 +158,7 @@ export default class LevelOne extends Scene {
     // Disables movement when the player is in a Cutscene
     if (!this.isInCutscene) {
       // Player Move UP
-      if (keyListener.isKeyDown(KeyListener.KEY_W)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_W) || keyListener.isKeyDown(KeyListener.KEY_UP)) {
         if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
         if (this.isCorrect) {
           if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
@@ -168,7 +168,7 @@ export default class LevelOne extends Scene {
         }
       }
       // Player Move DOWN
-      if (keyListener.isKeyDown(KeyListener.KEY_S)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_S) || keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
         if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
         if (this.isCorrect) {
           if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
@@ -176,7 +176,7 @@ export default class LevelOne extends Scene {
         }
       }
       // Player Move LEFT
-      if (keyListener.isKeyDown(KeyListener.KEY_A)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_A) || keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
         if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
         if (this.isCorrect) {
           if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
@@ -185,7 +185,7 @@ export default class LevelOne extends Scene {
         }
       }
       // Player Move RIGHT
-      if (keyListener.isKeyDown(KeyListener.KEY_D)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_D) || keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
         if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
         if (this.isCorrect) {
           if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();
