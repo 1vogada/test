@@ -12,7 +12,9 @@ export default class LevelTwo extends Scene {
 
   private gameObjects: GameObject[] = [];
 
-  // Playable area: LEFT
+  private isCorrect: boolean;
+
+  // Playable area: MAIN
   private playableAreaMainX: number;
 
   private playableAreaMainY: number;
@@ -20,6 +22,15 @@ export default class LevelTwo extends Scene {
   private playableAreaMainMaxX: number;
 
   private playableAreaMainMaxY: number;
+
+  // Playable area: RIGHT
+  private playableAreaRightX: number;
+
+  private playableAreaRightY: number;
+
+  private playableAreaRightMaxX: number;
+
+  private playableAreaRightMaxY: number;
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
@@ -31,6 +42,13 @@ export default class LevelTwo extends Scene {
     this.playableAreaMainMaxY = 905;
     this.playableAreaMainX = 130;
     this.playableAreaMainY = 390;
+
+    this.playableAreaRightMaxX = maxX;
+    this.playableAreaRightMaxY = 1200;
+    this.playableAreaRightX = 1430;
+    this.playableAreaRightY = 800;
+
+    this.isCorrect = false;
   }
 
   /**
@@ -42,17 +60,25 @@ export default class LevelTwo extends Scene {
     const playerPosX: number = this.player.getPosX();
 
     if (keyListener.isKeyDown(KeyListener.KEY_W)) {
-      if (playerPosY > this.playableAreaMainY) this.player.moveUp();
+      if (!this.isCorrect && playerPosY > this.playableAreaMainY) this.player.moveUp();
+      else if (this.isCorrect && playerPosX > this.playableAreaRightX && playerPosY > this.playableAreaRightY) this.player.moveUp();
+      else if (playerPosY > this.playableAreaMainY) this.player.moveUp();
     }
     if (keyListener.isKeyDown(KeyListener.KEY_S)) {
-      if (playerPosY < this.playableAreaMainMaxY) this.player.moveDown();
+      if (!this.isCorrect && playerPosY < this.playableAreaMainMaxY) this.player.moveDown();
+      else if (this.isCorrect && playerPosX > this.playableAreaRightX && playerPosY < this.playableAreaRightMaxY) this.player.moveUp();
+      else if (playerPosY < this.playableAreaMainMaxY) this.player.moveDown();
     }
     if (keyListener.isKeyDown(KeyListener.KEY_A)) {
       if (playerPosX > this.playableAreaMainX) this.player.moveLeft();
     }
     if (keyListener.isKeyDown(KeyListener.KEY_D)) {
-      if (playerPosX < this.playableAreaMainMaxX) this.player.moveRight();
+      if (!this.isCorrect && playerPosX < this.playableAreaMainMaxX) this.player.moveRight();
+      else if (this.isCorrect && playerPosY > this.playableAreaRightY && playerPosY < this.playableAreaRightMaxY && playerPosX < this.playableAreaRightMaxX) this.player.moveRight();
+      else if (playerPosX < this.playableAreaMainMaxX) this.player.moveRight();
     }
+
+    if (keyListener.keyPressed(KeyListener.KEY_O)) this.isCorrect = true;
   }
 
   public update(elapsed: number): Scene {
