@@ -14,7 +14,7 @@ export default class DialogueLevelOne extends DialogueBox {
         this.state = 1;
         this.beforeAnswer = true;
         this.playerDialogue = true;
-        this.image = CanvasUtil.loadNewImage('../assets/LevelOne/Dialogue/d1.png');
+        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/d1.png');
     }
     upCount(choice) {
         if (this.state === 1 && !this.isFinished) {
