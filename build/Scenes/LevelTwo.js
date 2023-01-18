@@ -45,7 +45,7 @@ export default class LevelTwo extends Scene {
         this.playableAreaRightMaxY = 730;
         this.playableAreaRightX = 1430;
         this.playableAreaRightY = 500;
-        this.gameObjects.push(new Crowbar(600, 300, false));
+        this.gameObjects.push(new Crowbar(600, 300, true));
         this.gameObjects.push(new Chest(1250, 700));
         this.gameObjects.push(new Papy(780, 230));
         this.gameObjects.push(new Key(-500, 500));
@@ -97,18 +97,28 @@ export default class LevelTwo extends Scene {
             this.isUsing = true;
         if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
             this.dialogueCrowbar.upCount(null);
+            this.dialogueKey.upCount(null);
         }
         if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
             this.isUsing = true;
-            this.dialogueCrowbar.upCount(1);
-        }
-        if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
-            this.isUsing = true;
-            this.dialogueCrowbar.upCount(3);
+            if (this.dialogueCrowbarStarted)
+                this.dialogueCrowbar.upCount(1);
+            if (this.dialogueKeyStarted)
+                this.dialogueKey.upCount(1);
         }
         if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
             this.isUsing = true;
-            this.dialogueCrowbar.upCount(2);
+            if (this.dialogueCrowbarStarted)
+                this.dialogueCrowbar.upCount(2);
+            if (this.dialogueKeyStarted)
+                this.dialogueKey.upCount(2);
+        }
+        if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+            this.isUsing = true;
+            if (this.dialogueCrowbarStarted)
+                this.dialogueCrowbar.upCount(3);
+            if (this.dialogueKeyStarted)
+                this.dialogueKey.upCount(3);
         }
     }
     update(elapsed) {
@@ -181,6 +191,7 @@ export default class LevelTwo extends Scene {
             });
         });
         this.numOfSetPlates = 0;
+        this.isUsing = false;
         return null;
     }
     render(canvas) {
@@ -194,6 +205,13 @@ export default class LevelTwo extends Scene {
         }
         if (this.dialogueCrowbarStarted) {
             this.dialogueCrowbar.render(canvas);
+        }
+        if (this.isTalking && !this.dialogueKeyStarted && this.hasKey) {
+            this.dialogueKey = new DialogueLevelTwo(500, 500, 'Key');
+            this.dialogueKeyStarted = true;
+        }
+        if (this.dialogueKeyStarted) {
+            this.dialogueKey.render(canvas);
         }
     }
 }
