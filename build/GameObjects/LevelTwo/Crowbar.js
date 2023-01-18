@@ -1,4 +1,4 @@
-import GameObject from '../GameObject';
+import GameObject from '../GameObject.js';
 export default class Crowbar extends GameObject {
     constructor(posX, posY) {
         super();
