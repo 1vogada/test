@@ -94,11 +94,12 @@ export default class LevelOne extends Scene {
     this.gameObjects.push(new Helper(600, 700));
     this.soundEffect = new SoundEffectPlayer();
     this.music = new MusicPlayer();
+    this.isFullScreen = false;
+
     this.playableAreaLeftMaxX = maxX / 2;
     this.playableAreaLeftMaxY = 865;
     this.playableAreaLeftX = 0;
     this.playableAreaLeftY = 290;
-    this.isFullScreen = false;
 
     this.playableAreaBridgeMaxX = 1350;
     this.playableAreaBridgeMaxY = 850;
