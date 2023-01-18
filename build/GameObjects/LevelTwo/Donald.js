@@ -5,10 +5,10 @@ export default class Chest extends GameObject {
         super();
         this.posX = posX;
         this.posY = posY;
-        this.image = CanvasUtil.loadNewImage('../assets/LevelTwo/Objects/chest.png');
+        this.image = CanvasUtil.loadNewImage('../assets/LevelTwo/Objects/donald.png');
     }
     update() {
         console.log(this.posX);
     }
 }
-//# sourceMappingURL=Chest.js.map
+//# sourceMappingURL=Donald.js.map
