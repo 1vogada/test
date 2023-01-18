@@ -1,5 +1,5 @@
-import CanvasUtil from '../CanvasUtil.js';
-import GameObject from './GameObject.js';
+import CanvasUtil from '../../CanvasUtil.js';
+import GameObject from '../GameObject.js';
 
 export default class Rock extends GameObject {
   private isInUse: boolean;
@@ -8,7 +8,7 @@ export default class Rock extends GameObject {
 
   public constructor(posX: number, posY: number, special: boolean) {
     super();
-    this.image = CanvasUtil.loadNewImage('./assets/rock.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/rock.png');
     this.isInUse = false;
     this.posX = posX;
     this.posY = posY;

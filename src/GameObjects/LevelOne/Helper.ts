@@ -1,5 +1,5 @@
-import CanvasUtil from '../CanvasUtil.js';
-import GameObject from './GameObject.js';
+import CanvasUtil from '../../CanvasUtil.js';
+import GameObject from '../GameObject.js';
 
 export default class Helper extends GameObject {
   public constructor(posX: number, posY: number) {

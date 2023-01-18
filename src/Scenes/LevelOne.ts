@@ -5,10 +5,10 @@ import Scene from './Scene.js';
 import Player from '../Player.js';
 import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
-import Rock from '../GameObjects/Rock.js';
-import Helper from '../GameObjects/Helper.js';
-import Bridge from '../GameObjects/Bridge.js';
-import Plate from '../GameObjects/Plate.js';
+import Rock from '../GameObjects/LevelOne/Rock.js';
+import Helper from '../GameObjects/LevelOne/Helper.js';
+import Bridge from '../GameObjects/LevelOne/Bridge.js';
+import Plate from '../GameObjects/LevelOne/Plate.js';
 import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import MusicPlayer from '../MusicPlayer.js';
@@ -89,16 +89,17 @@ export default class LevelOne extends Scene {
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
-    this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
+    this.background = CanvasUtil.loadNewImage('./assets/LevelOne/backgroundLevelOne.png');
     this.player = new Player();
     this.gameObjects.push(new Helper(600, 700));
     this.soundEffect = new SoundEffectPlayer();
     this.music = new MusicPlayer();
+    this.isFullScreen = false;
+
     this.playableAreaLeftMaxX = maxX / 2;
     this.playableAreaLeftMaxY = 865;
     this.playableAreaLeftX = 0;
     this.playableAreaLeftY = 290;
-    this.isFullScreen = false;
 
     this.playableAreaBridgeMaxX = 1350;
     this.playableAreaBridgeMaxY = 850;
@@ -157,7 +158,7 @@ export default class LevelOne extends Scene {
     // Disables movement when the player is in a Cutscene
     if (!this.isInCutscene) {
       // Player Move UP
-      if (keyListener.isKeyDown(KeyListener.KEY_W)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_W) || keyListener.isKeyDown(KeyListener.KEY_UP)) {
         if (!this.isCorrect && playerPosY > this.playableAreaLeftY) this.player.moveUp();
         if (this.isCorrect) {
           if (playerPosX > this.playableAreaBridgeX && playerPosY - 20 > this.playableAreaBridgeY) this.player.moveUp();
@@ -167,7 +168,7 @@ export default class LevelOne extends Scene {
         }
       }
       // Player Move DOWN
-      if (keyListener.isKeyDown(KeyListener.KEY_S)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_S) || keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
         if (!this.isCorrect && playerPosY < this.playableAreaLeftMaxY) this.player.moveDown();
         if (this.isCorrect) {
           if (playerPosY < this.playableAreaLeftMaxY && playerPosX - 10 < this.playableAreaEndX) this.player.moveDown();
@@ -175,7 +176,7 @@ export default class LevelOne extends Scene {
         }
       }
       // Player Move LEFT
-      if (keyListener.isKeyDown(KeyListener.KEY_A)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_A) || keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
         if (!this.isCorrect && playerPosX > this.playableAreaLeftX) this.player.moveLeft();
         if (this.isCorrect) {
           if (playerPosX > this.playableAreaLeftX && playerPosX < this.playableAreaLeftMaxX) this.player.moveLeft();
@@ -184,7 +185,7 @@ export default class LevelOne extends Scene {
         }
       }
       // Player Move RIGHT
-      if (keyListener.isKeyDown(KeyListener.KEY_D)) {
+      if (keyListener.isKeyDown(KeyListener.KEY_D) || keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
         if (!this.isCorrect && playerPosX < this.playableAreaLeftMaxX) this.player.moveRight();
         if (this.isCorrect) {
           if (playerPosY + 10 > this.playableAreaBridgeY && playerPosX < this.playableAreaBridgeMaxX) this.player.moveRight();

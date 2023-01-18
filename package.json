@@ -1,23 +1,27 @@
 {
-  "name": "ts-skeleton-game",
-  "version": "1.0.0",
-  "repository": "git@github.com:TonevS/pabo-game.github.io",
-  "author": "TonevS, 1vogada",
+  "name": "cybertale",
+  "version": "1.0",
+  "repository": "https://github.com/HZ-OOP/team12.git",
+  "author": "TonevS, Damyan03, 1vogada, IvanK17",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "type": "module",
+  "homepage": "https://hz-oop.github.io/team12/",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc --watch "
+    "watch": "tsc --watch ",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "typescript": "4.8",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint": "^8.18.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsdoc": "^39.3.3"
+    "eslint-plugin-jsdoc": "^39.3.3",
+    "gh-pages": "^4.0.0",
+    "typescript": "4.8"
   }
 }

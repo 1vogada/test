@@ -3,6 +3,7 @@ import KeyListener from '../KeyListener.js';
 import LevelOne from './LevelOne.js';
 import Scene from './Scene.js';
 import MusicPlayer from '../MusicPlayer.js';
+import LevelTwo from './LevelTwo.js';
 
 export default class SceneStart extends Scene {
   private starting: boolean;
@@ -33,11 +34,10 @@ export default class SceneStart extends Scene {
       this.starting = true;
       this.choice = 1;
     }
-    // Remove commenting when Level 2 and 3 are implemented
-    // if (keyListener.keyPressed(KeyListener.KEY_2)) {
-    // this.starting = true;
-    // this.choice = 2;
-    // }
+    if (keyListener.keyPressed(KeyListener.KEY_2)) {
+      this.starting = true;
+      this.choice = 2;
+    }
     // if (keyListener.keyPressed(KeyListener.KEY_3)) {
     // this.starting = true;
     // this.choice = 3;
@@ -58,6 +58,7 @@ export default class SceneStart extends Scene {
           this.music.stopSound();
           return new LevelOne(this.maxX, this.maxY);
         case 2:
+          return new LevelTwo(this.maxX, this.maxY);
         case 3:
         default:
           break;
