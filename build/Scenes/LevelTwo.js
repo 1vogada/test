@@ -38,7 +38,7 @@ export default class LevelTwo extends Scene {
     processInput(keyListener) {
         const playerPosY = this.player.getPosY() + this.player.getHeight();
         const playerPosX = this.player.getPosX();
-        if (keyListener.isKeyDown(KeyListener.KEY_W)) {
+        if (keyListener.isKeyDown(KeyListener.KEY_W) || keyListener.isKeyDown(KeyListener.KEY_UP)) {
             if (!this.isCorrect && playerPosY > this.playableAreaMainY)
                 this.player.moveUp();
             else if (this.isCorrect && playerPosX > this.playableAreaRightX && playerPosY > this.playableAreaRightY)
@@ -46,7 +46,7 @@ export default class LevelTwo extends Scene {
             else if (this.isCorrect && playerPosX - 10 < this.playableAreaRightX && playerPosY > this.playableAreaMainY)
                 this.player.moveUp();
         }
-        if (keyListener.isKeyDown(KeyListener.KEY_S)) {
+        if (keyListener.isKeyDown(KeyListener.KEY_S) || keyListener.isKeyDown(KeyListener.KEY_DOWN)) {
             if (!this.isCorrect && playerPosY < this.playableAreaMainMaxY)
                 this.player.moveDown();
             else if (this.isCorrect && playerPosX > this.playableAreaRightX && playerPosY < this.playableAreaRightMaxY)
@@ -54,11 +54,11 @@ export default class LevelTwo extends Scene {
             else if (this.isCorrect && playerPosX - 10 < this.playableAreaRightX && playerPosY < this.playableAreaMainMaxY)
                 this.player.moveDown();
         }
-        if (keyListener.isKeyDown(KeyListener.KEY_A)) {
+        if (keyListener.isKeyDown(KeyListener.KEY_A) || keyListener.isKeyDown(KeyListener.KEY_LEFT)) {
             if (playerPosX > this.playableAreaMainX)
                 this.player.moveLeft();
         }
-        if (keyListener.isKeyDown(KeyListener.KEY_D)) {
+        if (keyListener.isKeyDown(KeyListener.KEY_D) || keyListener.isKeyDown(KeyListener.KEY_RIGHT)) {
             if (!this.isCorrect && playerPosX < this.playableAreaMainMaxX)
                 this.player.moveRight();
             else if (this.isCorrect && playerPosY + 10 > this.playableAreaRightY && playerPosY - 10 < this.playableAreaRightMaxY && playerPosX < this.playableAreaRightMaxX)
