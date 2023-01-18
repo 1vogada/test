@@ -17,6 +17,7 @@ export default class Chest extends GameObject {
    */
   public unlockChest(): void {
     this.isSet = true;
+    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
   }
 
   public getIsSet(): boolean {
@@ -27,8 +28,6 @@ export default class Chest extends GameObject {
    *update
    */
   public override update(): void {
-    if (this.isSet) {
-      this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
-    }
+    console.log(this.getHeight());
   }
 }

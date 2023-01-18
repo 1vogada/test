@@ -16,6 +16,7 @@ export default class LevelTwo extends Scene {
     isCorrect;
     isUsing;
     hasCrowbar;
+    hasKey;
     isTalking;
     numOfSetPlates;
     playableAreaMainX;
@@ -30,9 +31,6 @@ export default class LevelTwo extends Scene {
         super(maxX, maxY);
         this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
         this.player = new Player(120, 300);
-        this.gameObjects.push(new Papy(780, 230));
-        this.gameObjects.push(new Key(300, 500));
-        this.gameObjects.push(new Donald(1800, 500));
         this.music = new MusicPlayer();
         this.playableAreaMainMaxX = 1430;
         this.playableAreaMainMaxY = 905;
@@ -42,10 +40,14 @@ export default class LevelTwo extends Scene {
         this.playableAreaRightMaxY = 730;
         this.playableAreaRightX = 1430;
         this.playableAreaRightY = 500;
-        this.gameObjects.push(new Crowbar(600, 300, true));
+        this.gameObjects.push(new Crowbar(600, 300, false));
         this.gameObjects.push(new Chest(1250, 700));
+        this.gameObjects.push(new Papy(780, 230));
+        this.gameObjects.push(new Key(-500, 500));
+        this.gameObjects.push(new Donald(1500, 500));
         this.isUsing = false;
         this.hasCrowbar = false;
+        this.hasKey = false;
         this.isTalking = false;
         this.isCorrect = false;
         this.numOfSetPlates = 0;
@@ -105,7 +107,7 @@ export default class LevelTwo extends Scene {
         this.gameObjects.forEach((object) => {
             if (object instanceof Crowbar && this.player.collideWithObject(object) && object.getStatusCarried() && this.hasCrowbar) {
                 object.setPosX(this.player.getPosX() + this.player.getWidth() * 0.65);
-                object.setPosY(this.player.getPosY() + this.player.getHeight() * 0.45);
+                object.setPosY(this.player.getPosY() + this.player.getHeight() * 0.15);
             }
             if (object instanceof Papy && this.player.collideWithObject(object) && this.isUsing) {
                 this.isTalking = true;
@@ -115,8 +117,45 @@ export default class LevelTwo extends Scene {
             this.gameObjects.forEach((chest) => {
                 if (crowbar instanceof Crowbar && chest instanceof Chest && crowbar.collideWithObject(chest) && !crowbar.getStatusCarried()) {
                     chest.unlockChest();
-                    crowbar.setIsSpecial(true);
                     crowbar.setPosX(chest.getPosX() - 5000);
+                    this.gameObjects.forEach((key) => {
+                        if (key instanceof Key) {
+                            chest.unlockChest();
+                            key.setPosX(1200);
+                        }
+                    });
+                }
+            });
+        });
+        this.gameObjects.forEach((key) => {
+            if (this.isUsing && this.player.collideWithObject(key) && key instanceof Key && !key.getIsSpecial()) {
+                if (!this.hasKey) {
+                    this.hasKey = true;
+                    key.setStatusCarried(true);
+                }
+                else if (this.hasKey) {
+                    this.hasKey = false;
+                    key.setStatusCarried(false);
+                }
+            }
+        });
+        this.gameObjects.forEach((object) => {
+            if (object instanceof Key && this.player.collideWithObject(object) && object.getStatusCarried() && this.hasKey) {
+                object.setPosX(this.player.getPosX() + this.player.getWidth() * 0.85);
+                object.setPosY(this.player.getPosY() + this.player.getHeight() * 0.65);
+            }
+            if (object instanceof Papy && this.player.collideWithObject(object) && this.isUsing) {
+                this.isTalking = true;
+            }
+        });
+        this.gameObjects.forEach((key) => {
+            this.gameObjects.forEach((donald) => {
+                if (key instanceof Key && donald instanceof Donald && key.collideWithObject(donald) && !key.getStatusCarried() && !key.getBroken()) {
+                    donald.removeDonald();
+                    this.isUsing = false;
+                    key.setPosX(donald.getPosX() - 5000);
+                    donald.setPosX(-5000);
+                    this.isCorrect = true;
                 }
             });
         });

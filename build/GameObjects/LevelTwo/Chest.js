@@ -11,14 +11,13 @@ export default class Chest extends GameObject {
     }
     unlockChest() {
         this.isSet = true;
+        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
     }
     getIsSet() {
         return this.isSet;
     }
     update() {
-        if (this.isSet) {
-            this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
-        }
+        console.log(this.getHeight());
     }
 }
 //# sourceMappingURL=Chest.js.map
