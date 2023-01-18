@@ -21,17 +21,6 @@ export default class Chest extends GameObject {
     return this.isSet;
   }
 
-  private isSet: boolean;
-
-  public setIsSet(status: boolean): void {
-    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
-    this.isSet = status;
-  }
-
-  public getIsSet(): boolean {
-    return this.isSet;
-  }
-
   /**
    *update
    */
