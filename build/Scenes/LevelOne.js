@@ -231,11 +231,8 @@ export default class LevelOne extends Scene {
             this.blackBarLength += elapsed * 0.1;
         }
         if (!this.isInCutscene && this.blackBarLength >= 0 && this.cutsceneTimeLeft < 0) {
-            console.log('test');
             this.blackBarLength -= elapsed * 0.1;
         }
-        console.log(`Cutscene: ${this.isInCutscene}`);
-        console.log(this.cutsceneTimeLeft);
         this.isUsing = false;
         if (this.dialogueStarted) {
             if (this.dialogue.getIsFinished()) {
