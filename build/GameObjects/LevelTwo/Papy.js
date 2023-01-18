@@ -6,6 +6,8 @@ export default class Papy extends Helper {
         this.posX = posX;
         this.posY = posY;
         this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/papy.png');
+        this.image.width = 200;
+        this.image.height = 300;
     }
     update() {
         console.log(this.posX);
