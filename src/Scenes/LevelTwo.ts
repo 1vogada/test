@@ -6,11 +6,17 @@ import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
 import KeyListener from '../KeyListener.js';
 import Papy from '../GameObjects/LevelTwo/Papy.js';
+import MusicPlayer from '../MusicPlayer.js';
+import SoundEffectPlayer from '../SoundEffectPlayer.js';
 
 export default class LevelTwo extends Scene {
   private player: Player;
 
   private gameObjects: GameObject[] = [];
+
+  private music: MusicPlayer;
+
+  private soundEffect: SoundEffectPlayer;
 
   private isCorrect: boolean;
 
@@ -35,8 +41,9 @@ export default class LevelTwo extends Scene {
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
-    this.player = new Player();
+    this.player = new Player(120, 300);
     this.gameObjects.push(new Papy(600, 700));
+    this.music = new MusicPlayer();
 
     this.playableAreaMainMaxX = 1430;
     this.playableAreaMainMaxY = 905;
@@ -49,6 +56,7 @@ export default class LevelTwo extends Scene {
     this.playableAreaRightY = 500;
 
     this.isCorrect = false;
+    this.music.playSound('levelTwoMusic');
   }
 
   /**
