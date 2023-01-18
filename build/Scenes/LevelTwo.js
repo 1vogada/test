@@ -17,7 +17,7 @@ export default class LevelTwo extends Scene {
     playableAreaRightMaxY;
     constructor(maxX, maxY) {
         super(maxX, maxY);
-        this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLevelTwo.png');
+        this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
         this.player = new Player();
         this.gameObjects.push(new Papy(600, 700));
         this.playableAreaMainMaxX = 1430;

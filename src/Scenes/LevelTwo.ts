@@ -34,7 +34,7 @@ export default class LevelTwo extends Scene {
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
-    this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLevelTwo.png');
+    this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
     this.player = new Player();
     this.gameObjects.push(new Papy(600, 700));
 
@@ -53,7 +53,7 @@ export default class LevelTwo extends Scene {
 
   /**
    *
-   * @param keyListener
+   * @param keyListener АС
    */
   public processInput(keyListener: KeyListener): void {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
