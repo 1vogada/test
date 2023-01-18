@@ -20,7 +20,7 @@ export default class DialogueLevelOne extends DialogueBox {
         if (this.state === 1 && !this.isFinished) {
             this.count += 1;
             if (this.playerDialogue) {
-                this.image = CanvasUtil.loadNewImage('../assets/LevelOne/Dialogue/d0.png');
+                this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/d0.png');
                 this.count -= 1;
                 this.playerDialogue = false;
             }
@@ -28,7 +28,7 @@ export default class DialogueLevelOne extends DialogueBox {
                 if (this.count === 2 || this.count === 5) {
                     this.playerDialogue = true;
                 }
-                this.image = CanvasUtil.loadNewImage(`../assets/LevelOne/Dialogue/d${this.count}.png`);
+                this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/d${this.count}.png`);
             }
             if (this.count === 7) {
                 this.state = 2;
@@ -37,19 +37,19 @@ export default class DialogueLevelOne extends DialogueBox {
         }
         else if (this.state === 2 && !this.isFinished) {
             if (this.beforeAnswer) {
-                this.image = CanvasUtil.loadNewImage(`../assets/LevelOne/Dialogue/q${this.count}.png`);
+                this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/q${this.count}.png`);
             }
             else if ((choice === 'A' || choice === 'C') && !this.beforeAnswer) {
-                this.image = CanvasUtil.loadNewImage(`../assets/LevelOne/Dialogue/choice${choice}.png`);
+                this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/choice${choice}.png`);
                 this.count = 0;
             }
             else if (choice === 'B' && !this.beforeAnswer) {
-                this.image = CanvasUtil.loadNewImage('../assets/LevelOne/Dialogue/choiceB.png');
+                this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/choiceB.png');
                 this.count = 0;
                 this.state = 3;
             }
             else {
-                this.image = CanvasUtil.loadNewImage(`../assets/LevelOne/Dialogue/w${this.count}.png`);
+                this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/w${this.count}.png`);
             }
             if (this.count === 3)
                 this.beforeAnswer = false;
@@ -61,10 +61,10 @@ export default class DialogueLevelOne extends DialogueBox {
         }
         else if (!this.isFinished) {
             if (this.count < 3) {
-                this.image = CanvasUtil.loadNewImage(`../assets/LevelOne/Dialogue/c${this.count}.png`);
+                this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/c${this.count}.png`);
             }
             else if (this.count === 3) {
-                this.image = CanvasUtil.loadNewImage('../assets/LevelOne/Dialogue/d0.png');
+                this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Dialogue/d0.png');
             }
             if (this.count === 4) {
                 this.isFinished = true;
@@ -72,7 +72,7 @@ export default class DialogueLevelOne extends DialogueBox {
             this.count += 1;
         }
         if (this.isFinished) {
-            this.image = CanvasUtil.loadNewImage('../assets/blank.png');
+            this.image = CanvasUtil.loadNewImage('./assets/blank.png');
         }
     }
     getIsFinished() {
