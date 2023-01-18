@@ -4,7 +4,7 @@ import GameObject from '../GameObject.js';
 export default class Rock extends GameObject {
   public constructor(posX: number, posY: number) {
     super();
-    this.image = CanvasUtil.loadNewImage('./assets/bridge.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/bridge.png');
     this.posX = posX;
     this.posY = posY;
   }

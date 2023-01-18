@@ -6,7 +6,7 @@ export default class Plate extends GameObject {
 
   public constructor(posX: number, posY: number) {
     super();
-    this.image = CanvasUtil.loadNewImage('./assets/pressurePlate.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlate.png');
     this.posX = posX;
     this.posY = posY;
   }
@@ -23,7 +23,7 @@ export default class Plate extends GameObject {
   }
 
   public setIsSet(status: boolean): void {
-    this.image = CanvasUtil.loadNewImage('./assets/pressurePlatePressed.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlatePressed.png');
     this.isSet = status;
   }
 }

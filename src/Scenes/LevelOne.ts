@@ -89,7 +89,7 @@ export default class LevelOne extends Scene {
 
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
-    this.background = CanvasUtil.loadNewImage('./assets/backgroundLevelOne.png');
+    this.background = CanvasUtil.loadNewImage('./assets/LevelOne/backgroundLevelOne.png');
     this.player = new Player();
     this.gameObjects.push(new Helper(600, 700));
     this.soundEffect = new SoundEffectPlayer();
