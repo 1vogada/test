@@ -1,5 +1,6 @@
 import Scene from './Scene.js';
 import Player from '../Player.js';
+import Crowbar from '../GameObjects/LevelTwo/Crowbar.js';
 import CanvasUtil from '../CanvasUtil.js';
 import KeyListener from '../KeyListener.js';
 import Papy from '../GameObjects/LevelTwo/Papy.js';
@@ -32,6 +33,7 @@ export default class LevelTwo extends Scene {
         this.playableAreaRightMaxY = 730;
         this.playableAreaRightX = 1430;
         this.playableAreaRightY = 500;
+        this.gameObjects.push(new Crowbar(600, 300, false));
         this.isCorrect = false;
         this.music.playSound('levelTwoMusic');
     }
