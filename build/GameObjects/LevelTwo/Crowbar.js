@@ -5,7 +5,7 @@ export default class Crowbar extends GameObject {
     isSpecial;
     constructor(posX, posY, special) {
         super();
-        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/rock.png');
+        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/crowbar.png');
         this.isInUse = false;
         this.posX = posX;
         this.posY = posY;
@@ -31,6 +31,12 @@ export default class Crowbar extends GameObject {
     }
     update(elapsed) {
         console.log(elapsed * this.posX);
+    }
+    collideWithObject(object) {
+        return (this.posX < object.getPosX() + object.getWidth()
+            && this.posX + this.image.width > object.getPosX()
+            && this.posY < object.getPosY() + object.getHeight()
+            && this.image.height + this.posY > object.getPosY());
     }
 }
 //# sourceMappingURL=Crowbar.js.map

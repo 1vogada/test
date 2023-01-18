@@ -8,7 +8,7 @@ export default class Crowbar extends GameObject {
 
   public constructor(posX: number, posY: number, special: boolean) {
     super();
-    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/rock.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/crowbar.png');
     this.isInUse = false;
     this.posX = posX;
     this.posY = posY;
@@ -45,5 +45,16 @@ export default class Crowbar extends GameObject {
    */
   public override update(elapsed: number): void {
     console.log(elapsed * this.posX);
+  }
+
+  /**
+   *
+   * @param object is good
+   */
+  public collideWithObject(object: GameObject): boolean {
+    return (this.posX < object.getPosX() + object.getWidth()
+      && this.posX + this.image.width > object.getPosX()
+      && this.posY < object.getPosY() + object.getHeight()
+      && this.image.height + this.posY > object.getPosY());
   }
 }

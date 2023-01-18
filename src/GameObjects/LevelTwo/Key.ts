@@ -1,4 +1,4 @@
-import GameObject from '../GameObject';
+import GameObject from '../GameObject.js';
 
 export default class Key extends GameObject {
   public constructor(posX: number, posY: number) {
