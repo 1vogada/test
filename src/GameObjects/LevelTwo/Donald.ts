@@ -6,7 +6,7 @@ export default class Chest extends GameObject {
     super();
     this.posX = posX;
     this.posY = posY;
-    this.image = CanvasUtil.loadNewImage('../assets/LevelTwo/Objects/donald.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/donald.png');
   }
 
   /**
