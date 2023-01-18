@@ -58,6 +58,7 @@ export default class SceneStart extends Scene {
           this.music.stopSound();
           return new LevelOne(this.maxX, this.maxY);
         case 2:
+          this.music.stopSound();
           return new LevelTwo(this.maxX, this.maxY);
         case 3:
         default:
