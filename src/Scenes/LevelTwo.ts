@@ -131,19 +131,23 @@ export default class LevelTwo extends Scene {
     // Button for when the player is in dialogue; SPACE Advances the dialogue further
     if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
       this.dialogueCrowbar.upCount(null);
+      if (this.dialogueKeyStarted) this.dialogueKey.upCount(null);
     }
     // Choose option buttons
     if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
       this.isUsing = true;
       this.dialogueCrowbar.upCount(1);
-    }
-    if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
-      this.isUsing = true;
-      this.dialogueCrowbar.upCount(3);
+      if (this.dialogueKeyStarted) this.dialogueKey.upCount(1);
     }
     if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
       this.isUsing = true;
       this.dialogueCrowbar.upCount(2);
+      if (this.dialogueKeyStarted) this.dialogueKey.upCount(2);
+    }
+    if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+      this.isUsing = true;
+      this.dialogueCrowbar.upCount(3);
+      if (this.dialogueKeyStarted) this.dialogueKey.upCount(3);
     }
   }
 
@@ -226,7 +230,7 @@ export default class LevelTwo extends Scene {
     //   }
     // });
     this.numOfSetPlates = 0;
-
+    this.isUsing = false;
     return null;
   }
 
@@ -241,6 +245,13 @@ export default class LevelTwo extends Scene {
     }
     if (this.dialogueCrowbarStarted) {
       this.dialogueCrowbar.render(canvas);
+    }
+    if (this.isTalking && !this.dialogueKeyStarted && this.dialogueCrowbar.getIsFinished() && this.hasKey) {
+      this.dialogueKey = new DialogueLevelTwo(500, 500, 'Key');
+      this.dialogueKeyStarted = true;
+    }
+    if (this.dialogueKeyStarted) {
+      this.dialogueKey.render(canvas);
     }
   }
 }
