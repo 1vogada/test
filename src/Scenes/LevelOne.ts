@@ -6,12 +6,13 @@ import Player from '../Player.js';
 import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
 import Rock from '../GameObjects/LevelOne/Rock.js';
-import Helper from '../GameObjects/LevelOne/Helper.js';
+import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/LevelOne/Bridge.js';
 import Plate from '../GameObjects/LevelOne/Plate.js';
 import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import MusicPlayer from '../MusicPlayer.js';
+import Sans from '../GameObjects/LevelOne/Sans.js';
 
 export default class LevelOne extends Scene {
   private soundEffect: SoundEffectPlayer;
@@ -91,7 +92,7 @@ export default class LevelOne extends Scene {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/LevelOne/backgroundLevelOne.png');
     this.player = new Player();
-    this.gameObjects.push(new Helper(600, 700));
+    this.gameObjects.push(new Sans(600, 700));
     this.soundEffect = new SoundEffectPlayer();
     this.music = new MusicPlayer();
     this.isFullScreen = false;
@@ -289,7 +290,7 @@ export default class LevelOne extends Scene {
     if (this.dialogueStarted) {
       if (this.dialogue.getIsFinished()) {
         this.gameObjects.forEach((object: GameObject) => {
-          if (object instanceof Helper) {
+          if (object instanceof Sans) {
             object.moveSans();
           }
         });
