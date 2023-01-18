@@ -8,7 +8,6 @@ import GameObject from '../GameObjects/GameObject.js';
 import KeyListener from '../KeyListener.js';
 import Papy from '../GameObjects/LevelTwo/Papy.js';
 import Key from '../GameObjects/LevelTwo/Key.js';
-import KeyBroken from '../GameObjects/LevelTwo/KeyBroken.js';
 import Donald from '../GameObjects/LevelTwo/Donald.js';
 import MusicPlayer from '../MusicPlayer.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
@@ -57,7 +56,6 @@ export default class LevelTwo extends Scene {
     this.player = new Player(120, 300);
     this.gameObjects.push(new Papy(780, 230));
     this.gameObjects.push(new Key(300, 500));
-    this.gameObjects.push(new KeyBroken(350, 500));
     this.gameObjects.push(new Donald(1800, 500));
     this.music = new MusicPlayer();
 
@@ -74,7 +72,6 @@ export default class LevelTwo extends Scene {
     this.gameObjects.push(new Crowbar(600, 300, true));
 
     this.gameObjects.push(new Chest(1250, 700));
-
 
     this.isUsing = false;
     this.hasCrowbar = false;
@@ -141,7 +138,7 @@ export default class LevelTwo extends Scene {
     this.gameObjects.forEach((crowbar: GameObject) => {
       this.gameObjects.forEach((chest: GameObject) => {
         if (crowbar instanceof Crowbar && chest instanceof Chest && crowbar.collideWithObject(chest) && !crowbar.getStatusCarried()) {
-          chest.setIsSet(true);
+          chest.unlockChest();
           // Locks the rock in place and snaps it to the appropriate position
           crowbar.setIsSpecial(true);
           crowbar.setPosX(chest.getPosX() - 5000);
