@@ -171,7 +171,7 @@ export default class LevelTwo extends Scene {
           crowbar.setStatusCarried(false);
         }
       }
-      if (this.dialogueCrowbarStarted && this.dialogueCrowbar.getIsFinished() && crowbar instanceof Crowbar)crowbar.setIsSpecial(false);
+      if (this.dialogueCrowbarStarted && this.dialogueCrowbar.getIsFinished() && crowbar instanceof Crowbar) crowbar.setIsSpecial(false);
     });
 
     this.gameObjects.forEach((object: GameObject) => {

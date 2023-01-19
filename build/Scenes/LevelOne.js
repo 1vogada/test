@@ -49,7 +49,6 @@ export default class LevelOne extends Scene {
         super(maxX, maxY);
         this.background = CanvasUtil.loadNewImage('./assets/LevelOne/backgroundLevelOne.png');
         this.player = new Player(400, 400);
-        this.gameObjects.push(new Sans(600, 700));
         this.soundEffect = new SoundEffectPlayer();
         this.music = new MusicPlayer();
         this.isFullScreen = false;
@@ -78,6 +77,7 @@ export default class LevelOne extends Scene {
         this.gameObjects.push(new Plate(900, 300));
         this.gameObjects.push(new Plate(900, 450));
         this.gameObjects.push(new Plate(900, 600));
+        this.gameObjects.push(new Sans(600, 700));
         this.isUsing = false;
         this.hasRock = false;
         this.isTalking = false;
