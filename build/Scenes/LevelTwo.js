@@ -2,6 +2,7 @@ import Scene from './Scene.js';
 import Player from '../Player.js';
 import Crowbar from '../GameObjects/LevelTwo/Crowbar.js';
 import CanvasUtil from '../CanvasUtil.js';
+import GameObject from '../GameObjects/GameObject.js';
 import KeyListener from '../KeyListener.js';
 import Papy from '../GameObjects/LevelTwo/Papy.js';
 import Key from '../GameObjects/LevelTwo/Key.js';
@@ -214,8 +215,8 @@ export default class LevelTwo extends Scene {
     render(canvas) {
         CanvasUtil.clearCanvas(canvas);
         CanvasUtil.drawImage(canvas, this.background, 0, 0);
-        this.player.render(canvas);
         this.gameObjects.forEach((object) => object.render(canvas));
+        this.player.render(canvas);
         if (this.isTalking && !this.dialogueCrowbarStarted) {
             this.dialogueCrowbar = new DialogueLevelTwo(500, 500, 'Crowbar');
             this.dialogueCrowbarStarted = true;
@@ -230,6 +231,15 @@ export default class LevelTwo extends Scene {
         if (this.dialogueKeyStarted) {
             this.dialogueKey.render(canvas);
         }
+        this.gameObjects.forEach((object) => {
+            if ((object instanceof GameObject) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
+                object.render(canvas);
+            }
+            else if (object instanceof Crowbar && this.hasCrowbar) {
+                this.player.render(canvas);
+                object.render(canvas);
+            }
+        });
     }
 }
 //# sourceMappingURL=LevelTwo.js.map
