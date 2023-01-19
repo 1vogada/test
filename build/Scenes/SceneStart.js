@@ -15,7 +15,7 @@ export default class SceneStart extends Scene {
         this.background = CanvasUtil.loadNewImage('./assets/backgroundSceneStart.png');
         this.choice = 0;
         this.music = new MusicPlayer();
-        this.firstStart = true;
+        this.music.playSound('mainMenu');
     }
     processInput(keyListener) {
         if (keyListener.keyPressed(KeyListener.KEY_1)) {
@@ -28,16 +28,13 @@ export default class SceneStart extends Scene {
         }
     }
     update() {
-        if (this.firstStart) {
-            this.firstStart = false;
-            this.music.playSound('mainMenu');
-        }
         if (this.starting) {
             switch (this.choice) {
                 case 1:
                     this.music.stopSound();
                     return new LevelOne(this.maxX, this.maxY);
                 case 2:
+                    this.music.stopSound();
                     return new LevelTwo(this.maxX, this.maxY);
                 case 3:
                 default:

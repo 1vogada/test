@@ -6,13 +6,13 @@ import Player from '../Player.js';
 import CanvasUtil from '../CanvasUtil.js';
 import GameObject from '../GameObjects/GameObject.js';
 import Rock from '../GameObjects/LevelOne/Rock.js';
-import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/LevelOne/Bridge.js';
 import Plate from '../GameObjects/LevelOne/Plate.js';
 import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import MusicPlayer from '../MusicPlayer.js';
 import Sans from '../GameObjects/LevelOne/Sans.js';
+import LevelTwo from './LevelTwo.js';
 
 export default class LevelOne extends Scene {
   private soundEffect: SoundEffectPlayer;
@@ -91,8 +91,7 @@ export default class LevelOne extends Scene {
   public constructor(maxX: number, maxY: number) {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/LevelOne/backgroundLevelOne.png');
-    this.player = new Player();
-    this.gameObjects.push(new Sans(600, 700));
+    this.player = new Player(400, 400);
     this.soundEffect = new SoundEffectPlayer();
     this.music = new MusicPlayer();
     this.isFullScreen = false;
@@ -126,6 +125,7 @@ export default class LevelOne extends Scene {
     this.gameObjects.push(new Plate(900, 300));
     this.gameObjects.push(new Plate(900, 450));
     this.gameObjects.push(new Plate(900, 600));
+    this.gameObjects.push(new Sans(600, 700));
 
     this.isUsing = false;
     this.hasRock = false;
@@ -199,23 +199,23 @@ export default class LevelOne extends Scene {
       if (keyListener.keyPressed(KeyListener.KEY_E)) this.isUsing = true;
       // Button for when the player is in dialogue; SPACE Advances the dialogue further
       if (keyListener.keyPressed(KeyListener.KEY_SPACE) && this.isTalking) {
-        this.dialogue.upCount('');
+        this.dialogue.upCount(null);
       }
       // Choose option buttons
       if (keyListener.keyPressed(KeyListener.KEY_1) && this.isTalking) {
         this.isUsing = true;
-        this.dialogue.upCount('A');
-      }
-      if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
-        this.isUsing = true;
-        this.dialogue.upCount('C');
+        this.dialogue.upCount(1);
       }
       if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
         this.isUsing = true;
-        this.dialogue.upCount('B');
+        this.dialogue.upCount(2);
         this.gameObjects.forEach((object: GameObject) => {
           if (object instanceof Rock && object.getIsSpecial()) object.setIsSpecial(false);
         });
+      }
+      if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+        this.isUsing = true;
+        this.dialogue.upCount(3);
       }
     }
   }
@@ -239,7 +239,7 @@ export default class LevelOne extends Scene {
         object.setPosX(this.player.getPosX() + this.player.getWidth() * 0.65);
         object.setPosY(this.player.getPosY() + this.player.getHeight() * 0.45);
       }
-      if (object instanceof Helper && this.player.collideWithObject(object) && this.isUsing) {
+      if (object instanceof Sans && this.player.collideWithObject(object) && this.isUsing) {
         this.isTalking = true;
       }
     });
@@ -267,9 +267,9 @@ export default class LevelOne extends Scene {
     this.numOfSetPlates = 0;
 
     if (this.isCorrect) {
-      this.gameObjects.forEach((object: GameObject) => {
-        if (object instanceof Bridge && object.getPosY() < 750 && this.cutsceneTimeLeft < 3500) {
-          object.setPosY(object.getPosY() + elapsed * 0.15);
+      this.gameObjects.forEach((bridge: GameObject) => {
+        if (bridge instanceof Bridge && bridge.getPosY() < 750 && this.cutsceneTimeLeft < 3500) {
+          bridge.setPosY(bridge.getPosY() + elapsed * 0.15);
         }
       });
     }
@@ -293,6 +293,18 @@ export default class LevelOne extends Scene {
         });
       }
     }
+    if (this.player.getPosX() > this.playableAreaEndMaxX) {
+      this.music.stopSound();
+      return new LevelTwo(this.maxX, this.maxY);
+      // this.isInCutscene = true;
+      // CanvasUtil.fillCanvas(canvas, 'white');
+      // CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
+      // if (this.winSoundGate) {
+      //   this.music.stopSound();
+      //   this.soundEffect.playSound('w in');
+      //   this.winSoundGate = false;
+      // }
+    }
     return null;
   }
 
@@ -315,7 +327,7 @@ export default class LevelOne extends Scene {
 
     // Render forward things closer and further things behind
     this.gameObjects.forEach((object: GameObject) => {
-      if ((object instanceof Rock || object instanceof Helper) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
+      if ((object instanceof Rock || object instanceof Sans) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
         object.render(canvas);
       }
     });
@@ -330,16 +342,5 @@ export default class LevelOne extends Scene {
 
     CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
     CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');
-
-    if (this.player.getPosX() > this.playableAreaEndMaxX) {
-      this.isInCutscene = true;
-      CanvasUtil.fillCanvas(canvas, 'white');
-      CanvasUtil.writeTextToCanvas(canvas, 'YOU WIN', 600, 600, 'center', 'sans-serif', 50, 'black');
-      if (this.winSoundGate) {
-        this.music.stopSound();
-        this.soundEffect.playSound('win');
-        this.winSoundGate = false;
-      }
-    }
   }
 }
