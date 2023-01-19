@@ -3,7 +3,6 @@ import Scene from './Scene.js';
 import Player from '../Player.js';
 import CanvasUtil from '../CanvasUtil.js';
 import Rock from '../GameObjects/LevelOne/Rock.js';
-import Helper from '../GameObjects/Helper.js';
 import Bridge from '../GameObjects/LevelOne/Bridge.js';
 import Plate from '../GameObjects/LevelOne/Plate.js';
 import DialogueLevelOne from '../Dialogue/DialogueLevelOne.js';
@@ -162,10 +161,6 @@ export default class LevelOne extends Scene {
                 this.isUsing = true;
                 this.dialogue.upCount(1);
             }
-            if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
-                this.isUsing = true;
-                this.dialogue.upCount(3);
-            }
             if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
                 this.isUsing = true;
                 this.dialogue.upCount(2);
@@ -173,6 +168,10 @@ export default class LevelOne extends Scene {
                     if (object instanceof Rock && object.getIsSpecial())
                         object.setIsSpecial(false);
                 });
+            }
+            if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
+                this.isUsing = true;
+                this.dialogue.upCount(3);
             }
         }
     }
@@ -194,7 +193,7 @@ export default class LevelOne extends Scene {
                 object.setPosX(this.player.getPosX() + this.player.getWidth() * 0.65);
                 object.setPosY(this.player.getPosY() + this.player.getHeight() * 0.45);
             }
-            if (object instanceof Helper && this.player.collideWithObject(object) && this.isUsing) {
+            if (object instanceof Sans && this.player.collideWithObject(object) && this.isUsing) {
                 this.isTalking = true;
             }
         });
@@ -266,7 +265,7 @@ export default class LevelOne extends Scene {
             });
         });
         this.gameObjects.forEach((object) => {
-            if ((object instanceof Rock || object instanceof Helper) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
+            if ((object instanceof Rock || object instanceof Sans) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
                 object.render(canvas);
             }
         });
