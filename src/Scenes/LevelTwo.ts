@@ -256,8 +256,8 @@ export default class LevelTwo extends Scene {
   public render(canvas: HTMLCanvasElement): void {
     CanvasUtil.clearCanvas(canvas);
     CanvasUtil.drawImage(canvas, this.background, 0, 0);
-    this.player.render(canvas);
     this.gameObjects.forEach((object: GameObject) => object.render(canvas));
+    this.player.render(canvas);
     if (this.isTalking && !this.dialogueCrowbarStarted) {
       this.dialogueCrowbar = new DialogueLevelTwo(500, 500, 'Crowbar');
       this.dialogueCrowbarStarted = true;
@@ -272,5 +272,13 @@ export default class LevelTwo extends Scene {
     if (this.dialogueKeyStarted) {
       this.dialogueKey.render(canvas);
     }
+    this.gameObjects.forEach((object: GameObject) => {
+      if ((object instanceof GameObject) && this.player.collideWithObject(object) && this.player.collideWithObject(object) && this.player.getPosY() + this.player.getHeight() < object.getPosY() + object.getHeight()) {
+        object.render(canvas);
+      } else if (object instanceof Crowbar && this.hasCrowbar) {
+        this.player.render(canvas);
+        object.render(canvas);
+      }
+    });
   }
 }
