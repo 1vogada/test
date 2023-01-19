@@ -31,6 +31,8 @@ export default class LevelTwo extends Scene {
 
   private soundEffect: SoundEffectPlayer;
 
+  private startDia2: boolean;
+
   private isCorrect: boolean;
 
   private isUsing: boolean;
@@ -83,7 +85,7 @@ export default class LevelTwo extends Scene {
 
     this.gameObjects.push(new Papy(780, 230));
 
-    this.gameObjects.push(new Key(-500, 500));
+    this.gameObjects.push(new Key(-500, 750));
 
     this.gameObjects.push(new Donald(1500, 500));
 
@@ -92,6 +94,7 @@ export default class LevelTwo extends Scene {
     this.hasKey = false;
     this.isTalking = false;
     this.isCorrect = false;
+    this.startDia2 = false;
     this.numOfSetPlates = 0;
     this.dialogueCrowbarStarted = false;
     this.dialogueKeyStarted = false;
@@ -144,7 +147,7 @@ export default class LevelTwo extends Scene {
       this.dialogueCrowbar.upCount(2);
       if (this.dialogueKeyStarted) this.dialogueKey.upCount(2);
     }
-    if (keyListener.keyPressed(KeyListener.KEY_2) && this.isTalking) {
+    if (keyListener.keyPressed(KeyListener.KEY_3) && this.isTalking) {
       this.isUsing = true;
       this.dialogueCrowbar.upCount(3);
       if (this.dialogueKeyStarted) this.dialogueKey.upCount(3);
@@ -152,6 +155,11 @@ export default class LevelTwo extends Scene {
   }
 
   public update(elapsed: number): Scene {
+    if (this.isCorrect) {
+      this.gameObjects.forEach((donald: GameObject) => {
+        if (donald instanceof Donald) { donald.moveDonald(); }
+      });
+    }
     console.log(this.maxX);
     this.gameObjects.forEach((crowbar: Crowbar) => {
       if (this.isUsing && this.player.collideWithObject(crowbar) && crowbar instanceof Crowbar && !crowbar.getIsSpecial()) {
@@ -163,6 +171,7 @@ export default class LevelTwo extends Scene {
           crowbar.setStatusCarried(false);
         }
       }
+      if (this.dialogueCrowbarStarted && this.dialogueCrowbar.getIsFinished() && crowbar instanceof Crowbar)crowbar.setIsSpecial(false);
     });
 
     this.gameObjects.forEach((object: GameObject) => {
@@ -182,7 +191,7 @@ export default class LevelTwo extends Scene {
           this.gameObjects.forEach((key: GameObject) => {
             if (key instanceof Key) {
               chest.unlockChest();
-              key.setPosX(1200);
+              key.setPosX(1290);
             }
           });
         }
@@ -199,6 +208,9 @@ export default class LevelTwo extends Scene {
           key.setStatusCarried(false);
         }
       }
+      if (this.dialogueKeyStarted && this.dialogueKey.getIsFinished() && key instanceof Key) {
+        key.repairKey();
+      }
     });
 
     this.gameObjects.forEach((object: GameObject) => {
@@ -206,17 +218,24 @@ export default class LevelTwo extends Scene {
         object.setPosX(this.player.getPosX() + this.player.getWidth() * 0.85);
         object.setPosY(this.player.getPosY() + this.player.getHeight() * 0.65);
       }
-      if (object instanceof Papy && this.player.collideWithObject(object) && this.isUsing) {
-        this.isTalking = true;
-      }
+    });
+    this.gameObjects.forEach((key: GameObject) => {
+      this.gameObjects.forEach((papy: GameObject) => {
+        if (key instanceof Key && papy instanceof Papy && key.collideWithObject(papy) && !key.getStatusCarried()) {
+          this.startDia2 = true;
+        }
+      });
     });
     this.gameObjects.forEach((key: GameObject) => {
       this.gameObjects.forEach((donald: GameObject) => {
-        if (key instanceof Key && donald instanceof Donald && key.collideWithObject(donald) && !key.getStatusCarried() && !key.getBroken()) {
-          donald.removeDonald();
+        if (key instanceof Key) {
+          console.log(key.getBroken());
+        }
+
+        if (key instanceof Key && donald instanceof Donald && key.collideWithObject(donald) && key.getStatusCarried() && !key.getBroken()) {
           this.isUsing = false;
-          key.setPosX(donald.getPosX() - 5000);
-          donald.setPosX(-5000);
+          key.setPosX(5000);
+
           this.isCorrect = true;
         }
       });
@@ -246,7 +265,7 @@ export default class LevelTwo extends Scene {
     if (this.dialogueCrowbarStarted) {
       this.dialogueCrowbar.render(canvas);
     }
-    if (this.isTalking && !this.dialogueKeyStarted && this.dialogueCrowbar.getIsFinished() && this.hasKey) {
+    if (this.isTalking && !this.dialogueKeyStarted && this.dialogueCrowbar.getIsFinished() && this.startDia2) {
       this.dialogueKey = new DialogueLevelTwo(500, 500, 'Key');
       this.dialogueKeyStarted = true;
     }

@@ -41,7 +41,7 @@ export default class Crowbar extends GameObject {
             && this.image.height + this.posY > object.getPosY());
     }
     repairKey() {
-        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/brokenKey.png');
+        this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/key.png');
         this.isBroken = false;
     }
     getBroken() {

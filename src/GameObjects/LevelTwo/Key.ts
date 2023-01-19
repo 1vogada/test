@@ -66,7 +66,7 @@ export default class Crowbar extends GameObject {
    * repairKey
    */
   public repairKey(): void {
-    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/brokenKey.png');
+    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/key.png');
     this.isBroken = false;
   }
 

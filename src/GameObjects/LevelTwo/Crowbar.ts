@@ -6,7 +6,7 @@ export default class Crowbar extends GameObject {
 
   private isSpecial: boolean;
 
-  public constructor(posX: number, posY: number, special: boolean) {
+  public constructor(posX: number, posY: number, special: boolean = false) {
     super();
     this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/crowbar.png');
     this.isInUse = false;

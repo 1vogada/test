@@ -15,8 +15,12 @@ export default class Donald extends GameObject {
   /**
    *
    */
-  public removeDonald(): void {
-    this.isThere = true;
+  public moveDonald(): void {
+    if (this.posX > 1400) {
+      this.posX -= 2;
+    } else if (this.posY > 200) {
+      this.posY -= 2;
+    } else this.posX = -5000;
   }
 
   public setPosX(posX: number): void {

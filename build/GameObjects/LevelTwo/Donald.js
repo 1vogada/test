@@ -9,8 +9,15 @@ export default class Donald extends GameObject {
         this.posY = posY;
         this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/donald.png');
     }
-    removeDonald() {
-        this.isThere = true;
+    moveDonald() {
+        if (this.posX > 1400) {
+            this.posX -= 2;
+        }
+        else if (this.posY > 200) {
+            this.posY -= 2;
+        }
+        else
+            this.posX = -5000;
     }
     setPosX(posX) {
         this.posX = posX;

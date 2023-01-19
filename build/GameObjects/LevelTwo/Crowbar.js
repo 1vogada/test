@@ -3,7 +3,7 @@ import GameObject from '../GameObject.js';
 export default class Crowbar extends GameObject {
     isInUse;
     isSpecial;
-    constructor(posX, posY, special) {
+    constructor(posX, posY, special = false) {
         super();
         this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/crowbar.png');
         this.isInUse = false;
