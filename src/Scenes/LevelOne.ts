@@ -13,6 +13,7 @@ import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import MusicPlayer from '../MusicPlayer.js';
 import Sans from '../GameObjects/LevelOne/Sans.js';
 import LevelTwo from './LevelTwo.js';
+import Tutorial from '../GameObjects/Tutorial.js';
 
 export default class LevelOne extends Scene {
   private soundEffect: SoundEffectPlayer;
@@ -27,9 +28,9 @@ export default class LevelOne extends Scene {
 
   private gameObjects: GameObject[] = [];
 
-  private isFullScreen: boolean;
+  private tutorial: Tutorial;
 
-  private firstRun: boolean;
+  private tutorialPrompt: Tutorial;
 
   // Playable area: LEFT
   private playableAreaLeftX: number;
@@ -47,16 +48,12 @@ export default class LevelOne extends Scene {
 
   private playableAreaBridgeMaxX: number;
 
-  private playableAreaBridgeMaxY: number;
-
   // Playable area: RIGHT
   private playableAreaRightX: number;
 
   private playableAreaRightY: number;
 
   private playableAreaRightMaxX: number;
-
-  private playableAreaRightMaxY: number;
 
   // Playable area: END
   private playableAreaEndX: number;
@@ -83,6 +80,8 @@ export default class LevelOne extends Scene {
 
   private blackBarLength: number;
 
+  private showTutorial: boolean;
+
   // Sound gates
   private musicStartGate: boolean;
 
@@ -94,7 +93,6 @@ export default class LevelOne extends Scene {
     this.player = new Player(400, 400);
     this.soundEffect = new SoundEffectPlayer();
     this.music = new MusicPlayer();
-    this.isFullScreen = false;
 
     this.playableAreaLeftMaxX = maxX / 2;
     this.playableAreaLeftMaxY = 865;
@@ -102,12 +100,10 @@ export default class LevelOne extends Scene {
     this.playableAreaLeftY = 290;
 
     this.playableAreaBridgeMaxX = 1350;
-    this.playableAreaBridgeMaxY = 850;
     this.playableAreaBridgeX = maxX / 2;
     this.playableAreaBridgeY = 750;
 
     this.playableAreaRightMaxX = 1550;
-    this.playableAreaRightMaxY = 865;
     this.playableAreaRightX = 1350;
     this.playableAreaRightY = 290;
 
@@ -136,7 +132,9 @@ export default class LevelOne extends Scene {
     this.blackBarLength = 0;
     this.isInCutscene = false;
     this.dialogueStarted = false;
-    this.firstRun = true;
+    this.showTutorial = false;
+    this.tutorial = new Tutorial('tutorial');
+    this.tutorialPrompt = new Tutorial('prompt');
     // sound bools and other sound stuff
     this.musicStartGate = true;
     this.winSoundGate = true;
@@ -148,8 +146,12 @@ export default class LevelOne extends Scene {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
     const playerPosX: number = this.player.getPosX();
 
+    //Tutorial Open
+    if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      if (this.showTutorial) this.showTutorial = false;
+      else this.showTutorial = true;
+    }
     // Servers as a debugging function
-    if (keyListener.keyPressed(KeyListener.KEY_O)) this.numOfSetPlates = 0;
     if (keyListener.keyPressed(KeyListener.KEY_P)) this.numOfSetPlates = 3;
 
     // Reloads the game (page reload)
@@ -339,6 +341,9 @@ export default class LevelOne extends Scene {
     if (this.dialogueStarted) {
       this.dialogue.render(canvas);
     }
+
+    if (this.showTutorial) this.tutorial.render(canvas);
+    else this.tutorialPrompt.render(canvas);
 
     CanvasUtil.fillRectangle(canvas, 0, 0, canvas.width, this.blackBarLength, 'black');
     CanvasUtil.fillRectangle(canvas, 0, canvas.height - this.blackBarLength, canvas.width, 1 + this.blackBarLength, 'black');

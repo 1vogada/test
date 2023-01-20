@@ -13,6 +13,7 @@ import MusicPlayer from '../MusicPlayer.js';
 import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
 import DialogueLevelTwo from '../Dialogue/DialogueLevelTwo.js';
+import Tutorial from '../GameObjects/Tutorial.js';
 
 export default class LevelTwo extends Scene {
   private player: Player;
@@ -43,7 +44,11 @@ export default class LevelTwo extends Scene {
 
   private isTalking: boolean;
 
-  private numOfSetPlates: number;
+  private tutorial: Tutorial;
+
+  private tutorialPrompt: Tutorial;
+
+  private showTutorial: boolean;
 
   // Playable area: MAIN
   private playableAreaMainX: number;
@@ -95,10 +100,12 @@ export default class LevelTwo extends Scene {
     this.isTalking = false;
     this.isCorrect = false;
     this.startDia2 = false;
-    this.numOfSetPlates = 0;
     this.dialogueCrowbarStarted = false;
     this.dialogueKeyStarted = false;
     this.music.playSound('levelTwoMusic');
+
+    this.tutorial = new Tutorial('tutorial');
+    this.tutorialPrompt = new Tutorial('prompt');
   }
 
   /**
@@ -109,6 +116,11 @@ export default class LevelTwo extends Scene {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
     const playerPosX: number = this.player.getPosX();
 
+    // Open tutorial
+    if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      if (this.showTutorial) this.showTutorial = false;
+      else this.showTutorial = true;
+    }
     if (keyListener.isKeyDown(KeyListener.KEY_W) || keyListener.isKeyDown(KeyListener.KEY_UP)) {
       if (!this.isCorrect && playerPosY > this.playableAreaMainY) this.player.moveUp();
       else if (this.isCorrect && playerPosX > this.playableAreaRightX && playerPosY > this.playableAreaRightY) this.player.moveUp();
@@ -248,7 +260,6 @@ export default class LevelTwo extends Scene {
     //     this.isCorrect = true;
     //   }
     // });
-    this.numOfSetPlates = 0;
     this.isUsing = false;
     return null;
   }
@@ -280,5 +291,7 @@ export default class LevelTwo extends Scene {
         object.render(canvas);
       }
     });
+    if (this.showTutorial) this.tutorial.render(canvas);
+    else this.tutorialPrompt.render(canvas);
   }
 }

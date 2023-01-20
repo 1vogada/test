@@ -10,6 +10,7 @@ import Donald from '../GameObjects/LevelTwo/Donald.js';
 import MusicPlayer from '../MusicPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
 import DialogueLevelTwo from '../Dialogue/DialogueLevelTwo.js';
+import Tutorial from '../GameObjects/Tutorial.js';
 export default class LevelTwo extends Scene {
     player;
     gameObjects = [];
@@ -25,7 +26,9 @@ export default class LevelTwo extends Scene {
     hasCrowbar;
     hasKey;
     isTalking;
-    numOfSetPlates;
+    tutorial;
+    tutorialPrompt;
+    showTutorial;
     playableAreaMainX;
     playableAreaMainY;
     playableAreaMainMaxX;
@@ -58,14 +61,21 @@ export default class LevelTwo extends Scene {
         this.isTalking = false;
         this.isCorrect = false;
         this.startDia2 = false;
-        this.numOfSetPlates = 0;
         this.dialogueCrowbarStarted = false;
         this.dialogueKeyStarted = false;
         this.music.playSound('levelTwoMusic');
+        this.tutorial = new Tutorial('tutorial');
+        this.tutorialPrompt = new Tutorial('prompt');
     }
     processInput(keyListener) {
         const playerPosY = this.player.getPosY() + this.player.getHeight();
         const playerPosX = this.player.getPosX();
+        if (keyListener.keyPressed(KeyListener.KEY_T)) {
+            if (this.showTutorial)
+                this.showTutorial = false;
+            else
+                this.showTutorial = true;
+        }
         if (keyListener.isKeyDown(KeyListener.KEY_W) || keyListener.isKeyDown(KeyListener.KEY_UP)) {
             if (!this.isCorrect && playerPosY > this.playableAreaMainY)
                 this.player.moveUp();
@@ -208,7 +218,6 @@ export default class LevelTwo extends Scene {
                 }
             });
         });
-        this.numOfSetPlates = 0;
         this.isUsing = false;
         return null;
     }
@@ -240,6 +249,10 @@ export default class LevelTwo extends Scene {
                 object.render(canvas);
             }
         });
+        if (this.showTutorial)
+            this.tutorial.render(canvas);
+        else
+            this.tutorialPrompt.render(canvas);
     }
 }
 //# sourceMappingURL=LevelTwo.js.map
