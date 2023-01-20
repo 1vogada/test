@@ -3,10 +3,6 @@ import Drawable from './Drawable.js';
 import GameObject from './GameObjects/GameObject.js';
 
 export default class Player extends Drawable {
-  private maxY: number;
-
-  private maxX: number;
-
   private speed: number;
 
   public constructor(playerPosX: number, playerPosY: number) {

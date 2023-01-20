@@ -1,16 +1,9 @@
 import CanvasUtil from '../CanvasUtil.js';
 import DialogueBox from './DialogueBox.js';
 export default class DialogueLevelTwo extends DialogueBox {
-    isFinished;
-    state;
     purpose;
     constructor(posX, posY, purpose) {
-        super();
-        this.isFinished = false;
-        this.posX = posX;
-        this.posY = posY;
-        this.count = 1;
-        this.state = 1;
+        super(posX, posY);
         this.purpose = purpose;
         this.image = CanvasUtil.loadNewImage(`./assets/LevelTwo/Dialogue/${this.purpose}Dialogue/d${this.count}.png`);
     }
@@ -65,9 +58,6 @@ export default class DialogueLevelTwo extends DialogueBox {
         else {
             this.image = CanvasUtil.loadNewImage('./assets/blank.png');
         }
-    }
-    getIsFinished() {
-        return this.isFinished;
     }
 }
 //# sourceMappingURL=DialogueLevelTwo.js.map

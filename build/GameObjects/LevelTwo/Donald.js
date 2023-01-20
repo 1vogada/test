@@ -1,32 +1,26 @@
 import CanvasUtil from '../../CanvasUtil.js';
 import GameObject from '../GameObject.js';
 export default class Donald extends GameObject {
-    isThere;
+    isDonaldGone;
     constructor(posX, posY) {
-        super();
-        this.isThere = false;
-        this.posX = posX;
-        this.posY = posY;
+        super(posX, posY);
+        this.isDonaldGone = false;
         this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/donald.png');
     }
-    moveDonald() {
-        if (this.posX > 1400) {
-            this.posX -= 2;
-        }
-        else if (this.posY > 200) {
-            this.posY -= 2;
-        }
-        else
-            this.posX = -5000;
-    }
-    setPosX(posX) {
-        this.posX = posX;
-    }
-    setPosY(posY) {
-        this.posY = posY;
+    setDonaldGone() {
+        this.isDonaldGone = true;
     }
     update() {
-        console.log(this.posX);
+        if (this.isDonaldGone) {
+            if (this.posX > 1400) {
+                this.posX -= 2;
+            }
+            else if (this.posY > 200) {
+                this.posY -= 2;
+            }
+            else
+                this.posX = -5000;
+        }
     }
 }
 //# sourceMappingURL=Donald.js.map

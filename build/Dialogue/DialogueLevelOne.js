@@ -1,15 +1,8 @@
 import CanvasUtil from '../CanvasUtil.js';
 import DialogueBox from './DialogueBox.js';
 export default class DialogueLevelOne extends DialogueBox {
-    isFinished;
-    state;
     constructor(posX, posY) {
-        super();
-        this.isFinished = false;
-        this.posX = posX;
-        this.posY = posY;
-        this.count = 1;
-        this.state = 1;
+        super(posX, posY);
         this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/d${this.count}.png`);
     }
     upCount(choice) {
@@ -59,9 +52,6 @@ export default class DialogueLevelOne extends DialogueBox {
         else {
             this.image = CanvasUtil.loadNewImage('./assets/blank.png');
         }
-    }
-    getIsFinished() {
-        return this.isFinished;
     }
 }
 //# sourceMappingURL=DialogueLevelOne.js.map

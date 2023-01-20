@@ -2,32 +2,29 @@ import GameObject from '../GameObject.js';
 import CanvasUtil from '../../CanvasUtil.js';
 
 export default class Chest extends GameObject {
-  private isSet: boolean;
+  private isUnlocked: boolean;
 
   public constructor(posX: number, posY: number) {
-    super();
+    super(posX, posY);
     this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chest.png');
-    this.posX = posX;
-    this.posY = posY;
-    this.isSet = false;
+    this.isUnlocked = false;
   }
 
   /**
    *  unlock chest
    */
   public unlockChest(): void {
-    this.isSet = true;
-    this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
+    this.isUnlocked = true;
   }
 
-  public getIsSet(): boolean {
-    return this.isSet;
+  public getIsUnlocked(): boolean {
+    return this.isUnlocked;
   }
 
   /**
    *update
    */
   public override update(): void {
-    console.log(this.getHeight());
+    if (this.isUnlocked) this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/chestOpen.png');
   }
 }
