@@ -3,20 +3,16 @@ import GameObject from '../GameObject.js';
 export default class Plate extends GameObject {
     isSet;
     constructor(posX, posY) {
-        super();
+        super(posX, posY);
         this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlate.png');
-        this.posX = posX;
-        this.posY = posY;
+        this.isSet = false;
     }
     update() {
-        console.log(this.posX);
+        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlatePressed.png');
+        this.isSet = true;
     }
     getIsSet() {
         return this.isSet;
-    }
-    setIsSet(status) {
-        this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlatePressed.png');
-        this.isSet = status;
     }
 }
 //# sourceMappingURL=Plate.js.map

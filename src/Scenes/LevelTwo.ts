@@ -9,19 +9,12 @@ import KeyListener from '../KeyListener.js';
 import Papy from '../GameObjects/LevelTwo/Papy.js';
 import Key from '../GameObjects/LevelTwo/Key.js';
 import Donald from '../GameObjects/LevelTwo/Donald.js';
-import MusicPlayer from '../MusicPlayer.js';
-import SoundEffectPlayer from '../SoundEffectPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
 import DialogueLevelTwo from '../Dialogue/DialogueLevelTwo.js';
+import Level from './Level.js';
 import SceneEnd from './SceneEnd.js';
 
-export default class LevelTwo extends Scene {
-  private player: Player;
-
-  private gameObjects: GameObject[] = [];
-
-  private music: MusicPlayer;
-
+export default class LevelTwo extends Level {
   private dialogueCrowbar: DialogueLevelTwo;
 
   private dialogueCrowbarStarted: boolean;
@@ -30,21 +23,11 @@ export default class LevelTwo extends Scene {
 
   private dialogueKeyStarted: boolean;
 
-  private soundEffect: SoundEffectPlayer;
-
   private startDia2: boolean;
-
-  private isCorrect: boolean;
-
-  private isUsing: boolean;
 
   private hasCrowbar: boolean;
 
   private hasKey: boolean;
-
-  private isTalking: boolean;
-
-  private numOfSetPlates: number;
 
   // Playable area: MAIN
   private playableAreaMainX: number;
@@ -68,7 +51,6 @@ export default class LevelTwo extends Scene {
     super(maxX, maxY);
     this.background = CanvasUtil.loadNewImage('./assets/LevelTwo/backgroundLeveltwo.png');
     this.player = new Player(120, 300);
-    this.music = new MusicPlayer();
 
     this.playableAreaMainMaxX = 1430;
     this.playableAreaMainMaxY = 905;
@@ -81,22 +63,14 @@ export default class LevelTwo extends Scene {
     this.playableAreaRightY = 500;
 
     this.gameObjects.push(new Crowbar(600, 300, true));
-
     this.gameObjects.push(new Chest(1250, 700));
-
-    this.gameObjects.push(new Papy(780, 230));
-
     this.gameObjects.push(new Key(-500, 750));
-
+    this.gameObjects.push(new Papy(780, 230));
     this.gameObjects.push(new Donald(1500, 500));
 
-    this.isUsing = false;
     this.hasCrowbar = false;
     this.hasKey = false;
-    this.isTalking = false;
-    this.isCorrect = false;
     this.startDia2 = false;
-    this.numOfSetPlates = 0;
     this.dialogueCrowbarStarted = false;
     this.dialogueKeyStarted = false;
     this.music.playSound('levelTwoMusic');
@@ -110,6 +84,11 @@ export default class LevelTwo extends Scene {
     const playerPosY: number = this.player.getPosY() + this.player.getHeight();
     const playerPosX: number = this.player.getPosX();
 
+    // Open tutorial
+    if (keyListener.keyPressed(KeyListener.KEY_T)) {
+      if (this.tutorial.getActive()) this.tutorial.setActive(false);
+      else this.tutorial.setActive(true);
+    }
     if (keyListener.isKeyDown(KeyListener.KEY_W) || keyListener.isKeyDown(KeyListener.KEY_UP)) {
       if (!this.isCorrect && playerPosY > this.playableAreaMainY) this.player.moveUp();
       else if (this.isCorrect && playerPosX > this.playableAreaRightX && playerPosY > this.playableAreaRightY) this.player.moveUp();
@@ -156,12 +135,12 @@ export default class LevelTwo extends Scene {
   }
 
   public update(elapsed: number): Scene {
-    if (this.isCorrect) {
-      this.gameObjects.forEach((donald: GameObject) => {
-        if (donald instanceof Donald) { donald.moveDonald(); }
-      });
-    }
-    console.log(this.maxX);
+    this.gameObjects.forEach((object: GameObject) => {
+      if (object instanceof Chest) object.update();
+      if (object instanceof Donald) object.update();
+      if (object instanceof Key) object.update();
+    });
+    this.tutorial.update();
     this.gameObjects.forEach((crowbar: Crowbar) => {
       if (this.isUsing && this.player.collideWithObject(crowbar) && crowbar instanceof Crowbar && !crowbar.getIsSpecial()) {
         if (!this.hasCrowbar) {
@@ -191,7 +170,6 @@ export default class LevelTwo extends Scene {
           crowbar.setPosX(chest.getPosX() - 5000);
           this.gameObjects.forEach((key: GameObject) => {
             if (key instanceof Key) {
-              chest.unlockChest();
               key.setPosX(1290);
             }
           });
@@ -229,15 +207,11 @@ export default class LevelTwo extends Scene {
     });
     this.gameObjects.forEach((key: GameObject) => {
       this.gameObjects.forEach((donald: GameObject) => {
-        if (key instanceof Key) {
-          console.log(key.getBroken());
-        }
-
-        if (key instanceof Key && donald instanceof Donald && key.collideWithObject(donald) && key.getStatusCarried() && !key.getBroken()) {
+        if (key instanceof Key && donald instanceof Donald && key.collideWithObject(donald) && key.getStatusCarried() && key.getIsRepaired()) {
           this.isUsing = false;
           key.setPosX(5000);
-
           this.isCorrect = true;
+          donald.setDonaldGone();
         }
       });
     });
@@ -249,7 +223,6 @@ export default class LevelTwo extends Scene {
     //     this.isCorrect = true;
     //   }
     // });
-    this.numOfSetPlates = 0;
     this.isUsing = false;
     if (this.player.getPosX() > 1850) {
       this.music.stopSound();
@@ -285,5 +258,6 @@ export default class LevelTwo extends Scene {
         object.render(canvas);
       }
     });
+    this.tutorial.render(canvas);
   }
 }

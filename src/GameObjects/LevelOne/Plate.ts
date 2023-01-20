@@ -5,25 +5,20 @@ export default class Plate extends GameObject {
   private isSet: boolean;
 
   public constructor(posX: number, posY: number) {
-    super();
+    super(posX, posY);
     this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlate.png');
-    this.posX = posX;
-    this.posY = posY;
+    this.isSet = false;
   }
 
   /**
    *update
    */
   public override update(): void {
-    console.log(this.posX);
+    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlatePressed.png');
+    this.isSet = true;
   }
 
   public getIsSet(): boolean {
     return this.isSet;
-  }
-
-  public setIsSet(status: boolean): void {
-    this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/pressurePlatePressed.png');
-    this.isSet = status;
   }
 }

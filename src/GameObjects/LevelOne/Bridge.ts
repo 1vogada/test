@@ -1,26 +1,18 @@
 import CanvasUtil from '../../CanvasUtil.js';
 import GameObject from '../GameObject.js';
 
-export default class Rock extends GameObject {
+export default class Bridge extends GameObject {
   public constructor(posX: number, posY: number) {
-    super();
+    super(posX, posY);
     this.image = CanvasUtil.loadNewImage('./assets/LevelOne/Objects/bridge.png');
-    this.posX = posX;
-    this.posY = posY;
   }
 
   /**
-   *update
+   * update
+   *
+   * @param elapsed ms
    */
-  public override update(): void {
-    console.log(this.posX);
-  }
-
-  public setPosX(posX: number): void {
-    this.posX = posX;
-  }
-
-  public setPosY(posY: number): void {
-    this.posY = posY;
+  public override update(elapsed: number): void {
+    if (this.posY < 750) this.posY += elapsed * 0.15;
   }
 }

@@ -2,22 +2,8 @@ import CanvasUtil from '../CanvasUtil.js';
 import DialogueBox from './DialogueBox.js';
 
 export default class DialogueLevelOne extends DialogueBox {
-  // if the dialogue is finished
-  private isFinished: boolean;
-
-  // 1 - starting dialogue, can't go once finished
-  // 2 - repeating dialogue, repeated after end of wrong choice dialogue
-  // 3 - ending dialogue, accessible after correct choice
-  // 4 - wrong dialogue, accessible after wrong choice
-  private state: number;
-
   public constructor(posX: number, posY: number) {
-    super();
-    this.isFinished = false;
-    this.posX = posX;
-    this.posY = posY;
-    this.count = 1;
-    this.state = 1;
+    super(posX, posY);
     this.image = CanvasUtil.loadNewImage(`./assets/LevelOne/Dialogue/d${this.count}.png`);
   }
 
@@ -69,14 +55,5 @@ export default class DialogueLevelOne extends DialogueBox {
     } else {
       this.image = CanvasUtil.loadNewImage('./assets/blank.png');
     }
-  }
-
-  /**
-   * getIsFinished
-   *
-   * @returns true if the dialogue is done
-   */
-  public getIsFinished(): boolean {
-    return this.isFinished;
   }
 }

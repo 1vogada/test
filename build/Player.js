@@ -1,8 +1,6 @@
 import CanvasUtil from './CanvasUtil.js';
 import Drawable from './Drawable.js';
 export default class Player extends Drawable {
-    maxY;
-    maxX;
     speed;
     constructor(playerPosX, playerPosY) {
         super();

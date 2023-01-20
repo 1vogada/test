@@ -1,42 +1,12 @@
 import CanvasUtil from '../../CanvasUtil.js';
-import GameObject from '../GameObject.js';
+import Pickable from '../Pickable.js';
 
-export default class Crowbar extends GameObject {
-  private isInUse: boolean;
-
-  private isSpecial: boolean;
-
+export default class Crowbar extends Pickable {
   public constructor(posX: number, posY: number, special: boolean = false) {
-    super();
+    super(posX, posY);
     this.image = CanvasUtil.loadNewImage('./assets/LevelTwo/Objects/crowbar.png');
     this.isInUse = false;
-    this.posX = posX;
-    this.posY = posY;
     this.isSpecial = special;
-  }
-
-  public setPosX(posX: number): void {
-    this.posX = posX;
-  }
-
-  public setPosY(posY: number): void {
-    this.posY = posY;
-  }
-
-  public getStatusCarried():boolean {
-    return this.isInUse;
-  }
-
-  public setStatusCarried(status: boolean): void {
-    this.isInUse = status;
-  }
-
-  public getIsSpecial(): boolean {
-    return this.isSpecial;
-  }
-
-  public setIsSpecial(status: boolean): void {
-    this.isSpecial = status;
   }
 
   /**
@@ -45,17 +15,5 @@ export default class Crowbar extends GameObject {
    */
   public override update(elapsed: number): void {
     console.log(elapsed * this.posX);
-  }
-
-  /**
-   *
-   * @param object is good
-   * @returns if it collides
-   */
-  public collideWithObject(object: GameObject): boolean {
-    return (this.posX < object.getPosX() + object.getWidth()
-      && this.posX + this.image.width > object.getPosX()
-      && this.posY < object.getPosY() + object.getHeight()
-      && this.image.height + this.posY > object.getPosY());
   }
 }
