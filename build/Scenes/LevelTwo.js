@@ -10,6 +10,7 @@ import Donald from '../GameObjects/LevelTwo/Donald.js';
 import MusicPlayer from '../MusicPlayer.js';
 import Chest from '../GameObjects/LevelTwo/Chest.js';
 import DialogueLevelTwo from '../Dialogue/DialogueLevelTwo.js';
+import SceneEnd from './SceneEnd.js';
 export default class LevelTwo extends Scene {
     player;
     gameObjects = [];
@@ -210,6 +211,10 @@ export default class LevelTwo extends Scene {
         });
         this.numOfSetPlates = 0;
         this.isUsing = false;
+        if (this.player.getPosX() > 1850) {
+            this.music.stopSound();
+            return new SceneEnd(this.maxX, this.maxY);
+        }
         return null;
     }
     render(canvas) {
@@ -218,14 +223,14 @@ export default class LevelTwo extends Scene {
         this.gameObjects.forEach((object) => object.render(canvas));
         this.player.render(canvas);
         if (this.isTalking && !this.dialogueCrowbarStarted) {
-            this.dialogueCrowbar = new DialogueLevelTwo(500, 500, 'Crowbar');
+            this.dialogueCrowbar = new DialogueLevelTwo(500, 440, 'Crowbar');
             this.dialogueCrowbarStarted = true;
         }
         if (this.dialogueCrowbarStarted) {
             this.dialogueCrowbar.render(canvas);
         }
         if (this.isTalking && !this.dialogueKeyStarted && this.dialogueCrowbar.getIsFinished() && this.startDia2) {
-            this.dialogueKey = new DialogueLevelTwo(500, 500, 'Key');
+            this.dialogueKey = new DialogueLevelTwo(500, 440, 'Key');
             this.dialogueKeyStarted = true;
         }
         if (this.dialogueKeyStarted) {
